@@ -10,12 +10,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.dragonboatrace.entities.Entity;
 import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.entities.Obstacle;
+import com.dragonboatrace.entities.PowerUp;
+import com.dragonboatrace.entities.PowerUpType;
 import com.dragonboatrace.tools.Hitbox;
 import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Settings;
 
 import java.util.ArrayList;
-
+import java.util.ListIterator;
 /**
  * Represents a generic Boat.
  *
@@ -42,6 +44,11 @@ public class Boat extends Entity {
      * The health of the boat.
      */
     protected float health;
+
+    /**
+     * The max health of the boat.
+     */
+    protected float maxHealth;
 
     /**
      * The shield of the boat.
@@ -162,6 +169,7 @@ public class Boat extends Entity {
         /* Get boat position from the position of the lane. */
         super(new Vector2(lane.getHitbox().getX() + (lane.getHitbox().getWidth() - EntityType.BOAT.getWidth()) / 2.0f, 100), new Vector2(), EntityType.BOAT, boat.getImageSrc());
         this.shield = 0;
+        this.maxHealth = boat.getHealth();
         this.health = boat.getHealth();
         this.stamina = boat.getStamina();
         this.agility = boat.getAgility();
@@ -323,6 +331,9 @@ public class Boat extends Entity {
      * @return True if a collision occurred, False if no collision.
      */
     protected boolean checkCollisions() {
+        boolean RecentCollision = false;
+
+        /* Check for collisions with obstacles */
         ArrayList<Obstacle> obstacles = this.lane.getObstacles();
         int size = obstacles.size();
         for (int i = 0; i < size; i++) {
@@ -331,11 +342,81 @@ public class Boat extends Entity {
                 obstacle.dispose();
                 this.lane.removeObstacle(obstacle);
                 size--;
-                this.health -= obstacle.getDamage();
-                return true;
+
+                float obstacleDamage = obstacle.getDamage();
+                /* Manage health loss when there is a shield */
+                if (this.shield == 0){
+                    this.health -= obstacleDamage;
+                }
+                else{
+                    /* if the shield is stronger than the damage of the obstacle */
+                    if(this.shield >= obstacleDamage){
+                        this.addShield(-1 * obstacleDamage);
+                    }
+                    /* if the shield is weaker than the damage of the obstacle */
+                    else{
+                        this.health -= (obstacleDamage - this.shield);
+                        this.shield = 0;
+                    }
+                }
+                RecentCollision = true;
             }
         }
-        return false;
+
+        /* Check for collisions with power ups */
+        ArrayList<PowerUp> powerUps = this.lane.getPowerUps();
+        size = powerUps.size();
+        for (int i = 0; i < size; i++) {
+            PowerUp powerUp = powerUps.get(i);
+            if (powerUp.getHitBox().collidesWith(this.hitbox)) {
+                powerUp.dispose();
+                this.lane.removePowerUp(powerUp);
+                size--;
+                this.health -= powerUp.getDamage();
+
+                /* give the boat the effect of the power up */
+                String type = powerUp.getType();
+                
+                /* Bomb Power up */
+                if(type == "CLEAR"){
+
+                    ListIterator<Obstacle> iter = obstacles.listIterator();
+                    while (iter.hasNext()) {
+                        Obstacle obstacle = iter.next();
+                        iter.remove();
+                        obstacle.dispose();
+                        this.lane.removeObstacle(obstacle);
+                    }
+                    
+
+
+                }
+
+                /* Speed Power up */
+                if(type ==  "SPEED"){
+                    this.speed *= 2;
+                }
+
+                /* Repair Power up */
+                if(type ==  "REPAIR"){
+                    this.health = this.maxHealth;
+                }
+
+                /* Shield Power up */
+                if(type == "SHIELD"){
+                    this.shield = 50;
+                }
+
+                /* Lateral Power up */
+                if(type ==  "LATERAL"){
+                    
+                }
+
+
+            }
+        }
+
+        return RecentCollision;
     }
 
     /**

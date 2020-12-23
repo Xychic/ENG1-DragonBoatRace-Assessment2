@@ -20,6 +20,10 @@ public class PowerUp extends Entity {
      * The damage the obstacle will deal when colliding with a player.
      */
     private final float damage;
+    /**
+     * The type of power up this is.
+     */
+    private final PowerUpType type;
 
     /**
      * Creates a new power up of a specific type and bounds in which it can be created.
@@ -35,6 +39,7 @@ public class PowerUp extends Entity {
         super(new Vector2(((int) startX + width) / 2.0f + ThreadLocalRandom.current().nextInt(-((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2, ((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2), Gdx.graphics.getHeight()), new Vector2(), EntityType.POWERUP, type.getTexture());
         this.speed = type.getSpeed();
         this.damage = type.getDamage();
+        this.type = type;
     }
 
     /**
@@ -75,4 +80,12 @@ public class PowerUp extends Entity {
         return this.position;
     }
 
+    /**
+     * The type of the power up.
+     *
+     * @return A String of the power up type.
+     */
+    public String getType() {
+        return this.type.toString();
+    }
 }
