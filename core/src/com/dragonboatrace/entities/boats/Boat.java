@@ -379,7 +379,6 @@ public class Boat extends Entity {
                 
                 /* Bomb Power up */
                 if(type == "CLEAR"){
-
                     ListIterator<Obstacle> iter = obstacles.listIterator();
                     while (iter.hasNext()) {
                         Obstacle obstacle = iter.next();
@@ -387,14 +386,11 @@ public class Boat extends Entity {
                         obstacle.dispose();
                         this.lane.removeObstacle(obstacle);
                     }
-                    
-
-
                 }
 
                 /* Speed Power up */
                 if(type ==  "SPEED"){
-                    this.speed *= 2;
+                    this.speed += 100;
                 }
 
                 /* Repair Power up */
