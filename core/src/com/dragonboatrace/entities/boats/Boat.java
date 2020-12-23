@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Represents a generic Boat.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Babar Khan, Benji Garment, Joe Wrieden
  */
 public class Boat extends Entity {
 
@@ -42,6 +42,11 @@ public class Boat extends Entity {
      * The health of the boat.
      */
     protected float health;
+
+    /**
+     * The shield of the boat.
+     */
+    protected float shield;
 
     /**
      * The stamina of the boat.
@@ -136,6 +141,11 @@ public class Boat extends Entity {
     protected BitmapFont staminaFont;
 
     /**
+     * Font for Shield Bar.
+     */
+    protected BitmapFont shieldFont;
+
+    /**
      * Font for Name Tag.
      */
     protected BitmapFont nameFont;
@@ -151,6 +161,7 @@ public class Boat extends Entity {
     public Boat(BoatType boat, Lane lane, String name) {
         /* Get boat position from the position of the lane. */
         super(new Vector2(lane.getHitbox().getX() + (lane.getHitbox().getWidth() - EntityType.BOAT.getWidth()) / 2.0f, 100), new Vector2(), EntityType.BOAT, boat.getImageSrc());
+        this.shield = 0;
         this.health = boat.getHealth();
         this.stamina = boat.getStamina();
         this.agility = boat.getAgility();
@@ -205,6 +216,18 @@ public class Boat extends Entity {
             parameter.size = (int) (50 / (this.layout.width / this.laneBox.getWidth()));
             parameter.color = Color.GREEN;
             staminaFont = generator.generateFont(parameter);
+        }
+
+        /* Font for displaying the shield */
+        parameter.size = 50;
+        parameter.color = Color.BLUE;
+        this.shieldFont = generator.generateFont(parameter);
+
+        layout.setText(shieldFont, "Shield: XXX");
+        if (this.layout.width > this.laneBox.getWidth()) {
+            parameter.size = (int) (50 / (this.layout.width / this.laneBox.getWidth()));
+            parameter.color = Color.BLUE;
+            shieldFont = generator.generateFont(parameter);
         }
 
     }
@@ -287,6 +310,10 @@ public class Boat extends Entity {
 
         staminaFont.draw(batch, "Stamina: " + (int) this.getStamina(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 105);
 
+        layout.setText(shieldFont, "Shield: XXX");
+
+        shieldFont.draw(batch, "Shield: " + (int) this.getShield(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 155);
+
         super.render(batch);
     }
 
@@ -347,10 +374,19 @@ public class Boat extends Entity {
     /**
      * Increase the current boat stamina.
      *
-     * @param change The amount of health to be added.
+     * @param change The amount of stamina to be added.
      */
     public void addStamina(float change) {
         this.stamina += change;
+    }
+
+    /**
+     * Increase the current boat shield.
+     *
+     * @param change The amount of shield to be added.
+     */
+    public void addShield(float change) {
+        this.shield += change;
     }
 
     /* Getters */
@@ -390,6 +426,15 @@ public class Boat extends Entity {
      */
     public float getStamina() {
         return this.stamina;
+    }
+
+    /**
+     * Get the current shield of the boat.
+     *
+     * @return The shield of the boat as a float.
+     */
+    public float getShield() {
+        return this.shield;
     }
 
     /**
