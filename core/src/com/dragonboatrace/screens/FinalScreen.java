@@ -8,14 +8,18 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
 import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.boats.Boat;
+import com.dragonboatrace.entities.boats.BoatType;
+import com.dragonboatrace.entities.boats.PlayerBoat;
 import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Lane;
 
 /**
  * Displays the screen that announces that the player has made it to the final.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class FinalScreen implements Screen {
 
@@ -36,11 +40,11 @@ public class FinalScreen implements Screen {
      * Creates a new screen that displays the announcement message to the player.
      *
      * @param game       The instance of the game to use.
-     * @param playerBoat The players boat to carry through the rounds.
+     * @param boatChosen The {@link BoatType} that the player chose.
      */
-    public FinalScreen(DragonBoatRace game, Boat playerBoat) {
+    public FinalScreen(DragonBoatRace game, BoatType boatChosen) {
         this.game = game;
-        this.playerBoat = playerBoat;
+        this.playerBoat = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), Gdx.graphics.getWidth() /  Settings.PLAYER_COUNT, this.game.getRound()), "Player");
 
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
@@ -56,7 +60,6 @@ public class FinalScreen implements Screen {
     @Override
     public void show() {
         Settings.setPlayerCount(4);
-
     }
 
     /**
@@ -76,8 +79,9 @@ public class FinalScreen implements Screen {
         layout.setText(font, "Press Space to continue to the final!");
         font.draw(this.game.getBatch(), "Press Space to continue to the final!", (Gdx.graphics.getWidth() - layout.width) / 2, 100 / Settings.SCALAR + layout.height);
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             this.game.setScreen(new MainGameScreen(this.game, this.playerBoat.getBoatType()));
+        }
 
         this.game.getBatch().end();
     }

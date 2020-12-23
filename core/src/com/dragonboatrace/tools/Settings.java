@@ -41,6 +41,11 @@ public class Settings {
     public static float OBSTACLE_COLLISION_TIME = 0.5f;
 
     /**
+     * The name of the save file
+     */
+    public static String SAVE_FILE_NAME = "/dragonBoatSave.json";
+
+    /**
      * Set the resolution of the screen.
      *
      * @param width  The width of the screen.

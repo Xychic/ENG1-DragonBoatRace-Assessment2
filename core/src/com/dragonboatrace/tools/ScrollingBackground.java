@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 /**
  * Represents the scrolling background.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class ScrollingBackground {
 
@@ -68,8 +68,10 @@ public class ScrollingBackground {
      */
     public void render(SpriteBatch batch) {
         /* render background at the position given by the vector */
+        batch.begin();
         batch.draw(image, this.xPosition, y1, image.getWidth() * imageScale, image.getHeight() * imageScale);
         batch.draw(image, this.xPosition, y2, image.getWidth() * imageScale, image.getHeight() * imageScale);
+        batch.end();
     }
 
     /**

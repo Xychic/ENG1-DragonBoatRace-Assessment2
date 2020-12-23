@@ -2,8 +2,11 @@ package com.dragonboatrace.tools;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.FinishLine;
 import com.dragonboatrace.entities.boats.Boat;
@@ -23,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Represents a Race.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class Race {
     /**
@@ -139,15 +142,25 @@ public class Race {
      *
      * @param batch The SpriteBatch to be added to.
      */
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, ShapeRenderer renderer) {
+        renderer.begin(ShapeType.Filled);
+        for (int i = 0; i < Settings.PLAYER_COUNT; i++) {
+            renderer.setColor(Color.DARK_GRAY);
+            renderer.rect(
+                (float) Gdx.graphics.getWidth() / Settings.PLAYER_COUNT * i,
+                0,
+                5,
+                Toolkit.getDefaultToolkit().getScreenSize().height
+            );
+        }
+        renderer.end();
+        batch.begin();
         theFinish.render(batch);
         player.render(batch);
         for (Boat boat : this.boats) {
             boat.render(batch);
         }
-        for (int i = 0; i < Settings.PLAYER_COUNT; i++) {
-            batch.draw(this.barrier, ((float) Gdx.graphics.getWidth() / Settings.PLAYER_COUNT) * i, 0, 5, Toolkit.getDefaultToolkit().getScreenSize().height);
-        }
+        batch.end();
     }
 
     /**
@@ -181,26 +194,30 @@ public class Race {
                 if (boatN.getTime() == time) {
                     switch (times.indexOf(time) + 1) {
                         case 1:
-                            if (game.getRound() == 4)
+                            if (game.getRound() == 4) {
                                 reason += "Gold Medal:      " + boatN.getName() + "\n";
-                            else
+                            } else {
                                 reason += "1st: " + boatN.getName() + "\n";
+                            }
                             break;
                         case 2:
-                            if (game.getRound() == 4)
+                            if (game.getRound() == 4) {
                                 reason += "Silver Medal:    " + boatN.getName() + "\n";
-                            else
+                            } else {
                                 reason += "2nd: " + boatN.getName() + "\n";
+                            }
                             break;
                         case 3:
-                            if (game.getRound() == 4)
+                            if (game.getRound() == 4) {
                                 reason += "Bronze Medal:    " + boatN.getName() + "\n";
-                            else
+                            } else {
                                 reason += "3rd: " + boatN.getName() + "\n";
+                            }
                             break;
                         default:
-                            if (game.getRound() != 4)
+                            if (game.getRound() != 4) {
                                 reason += times.indexOf(time) + 1 + "th: " + boatN.getName() + "\n";
+                            }
                     }
                 }
             }

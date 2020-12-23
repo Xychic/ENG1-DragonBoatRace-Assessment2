@@ -121,7 +121,7 @@ public class RoundsScreen implements Screen {
                 Collections.sort(temp);
                 ArrayList<Float> topPlayers = new ArrayList<>(temp.subList(0, 4));
                 if (topPlayers.contains(this.game.getPlayerTotalTime())) {
-                    this.game.setScreen(new FinalScreen(this.game, this.playerBoat));
+                    this.game.setScreen(new FinalScreen(this.game, this.playerBoat.getBoatType()));
                 } else {
                     this.game.setScreen(new GameOverScreen(this.game, "You were not fast enough. Better luck next time!"));
                 }
