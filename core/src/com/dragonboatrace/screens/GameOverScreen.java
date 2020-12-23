@@ -91,9 +91,10 @@ public class GameOverScreen implements Screen {
         layout.setText(font, "Press Esc to return to Main Menu");
         font.draw(this.game.getBatch(), "Press Esc to return to Main Menu", (Gdx.graphics.getWidth() - layout.width) / 2, 200/Settings.SCALAR);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE))
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             this.game.setScreen(new MainMenuScreen(this.game));
-
+        }
+        
         this.game.getBatch().end();
 
     }
