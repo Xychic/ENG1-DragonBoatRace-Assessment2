@@ -16,7 +16,7 @@ public class Tuple<A, B> {
     private B b;
 
     /**
-     * Creates a new Tuple with instantiating its values
+     * Creates a new Tuple without instantiating its values
      */
     public Tuple() {
 
