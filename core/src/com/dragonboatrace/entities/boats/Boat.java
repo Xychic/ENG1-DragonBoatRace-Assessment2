@@ -17,11 +17,12 @@ import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Settings;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.ListIterator;
 /**
  * Represents a generic Boat.
  *
- * @author Babar Khan, Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Babar Khan, Jacob Turner
  */
 public class Boat extends Entity {
 
@@ -54,6 +55,11 @@ public class Boat extends Entity {
      * The shield of the boat.
      */
     protected float shield;
+
+    /**
+     * The boost of the boat.
+     */
+    protected float boost;
 
     /**
      * The stamina of the boat.
@@ -153,6 +159,11 @@ public class Boat extends Entity {
     protected BitmapFont shieldFont;
 
     /**
+     * Font for Shield Bar.
+     */
+    protected BitmapFont boostFont;
+
+    /**
      * Font for Name Tag.
      */
     protected BitmapFont nameFont;
@@ -169,6 +180,7 @@ public class Boat extends Entity {
         /* Get boat position from the position of the lane. */
         super(new Vector2(lane.getHitbox().getX() + (lane.getHitbox().getWidth() - EntityType.BOAT.getWidth()) / 2.0f, 100), new Vector2(), EntityType.BOAT, boat.getImageSrc());
         this.shield = 0;
+        this.boost = 0;
         this.maxHealth = boat.getHealth();
         this.health = boat.getHealth();
         this.stamina = boat.getStamina();
@@ -238,6 +250,18 @@ public class Boat extends Entity {
             shieldFont = generator.generateFont(parameter);
         }
 
+        /* Font for displaying the boost */
+        parameter.size = 50;
+        parameter.color = Color.YELLOW;
+        this.boostFont = generator.generateFont(parameter);
+
+        layout.setText(shieldFont, "Boost: XXX");
+        if (this.layout.width > this.laneBox.getWidth()) {
+            parameter.size = (int) (50 / (this.layout.width / this.laneBox.getWidth()));
+            parameter.color = Color.YELLOW;
+            boostFont = generator.generateFont(parameter);
+        }
+
     }
 
     /**
@@ -281,10 +305,10 @@ public class Boat extends Entity {
     public void update(float deltaTime) {
 
         /* Check if boat is still in the lane */
-        if (this.getHitBox().leaves(this.laneBox))
+        if (this.getHitBox().leaves(this.laneBox)) {
             this.penaltyTime += 0.1;
+        }
         this.penaltyTime = Math.round(this.penaltyTime * 100) / (float) 100;
-
 
         this.distanceTravelled += this.velocity.y * deltaTime;
 
@@ -296,6 +320,13 @@ public class Boat extends Entity {
         if (!(this.velocity.isZero((float) 0.001))) {
             this.position.x += this.velocity.x * deltaTime;
             this.velocity.scl(dampen);
+        }
+
+        if (this.boost > 0) {
+            this.boost--;
+            if (this.boost == 1) {
+                this.speed -= 100;
+            }
         }
 
         /* The hit box needs moving to keep at the same pos as the boat */
@@ -322,6 +353,8 @@ public class Boat extends Entity {
 
         shieldFont.draw(batch, "Shield: " + (int) this.getShield(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 155);
 
+        layout.setText(boostFont, "Boost: XXX");
+        boostFont.draw(batch, "Boost: " + (int) this.getBoost(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 205);
         super.render(batch);
     }
 
@@ -334,27 +367,24 @@ public class Boat extends Entity {
         boolean RecentCollision = false;
 
         /* Check for collisions with obstacles */
-        ArrayList<Obstacle> obstacles = this.lane.getObstacles();
-        int size = obstacles.size();
-        for (int i = 0; i < size; i++) {
-            Obstacle obstacle = obstacles.get(i);
+        Iterator<Obstacle> obstacleIterator = this.lane.getObstacles().iterator();
+        while (obstacleIterator.hasNext()) {
+            Obstacle obstacle = obstacleIterator.next();
             if (obstacle.getHitBox().collidesWith(this.hitbox)) {
                 obstacle.dispose();
-                this.lane.removeObstacle(obstacle);
-                size--;
+                obstacleIterator.remove();
 
                 float obstacleDamage = obstacle.getDamage();
                 /* Manage health loss when there is a shield */
                 if (this.shield == 0){
                     this.health -= obstacleDamage;
-                }
-                else{
+                } else {
                     /* if the shield is stronger than the damage of the obstacle */
-                    if(this.shield >= obstacleDamage){
+                    if (this.shield >= obstacleDamage){
                         this.addShield(-1 * obstacleDamage);
                     }
                     /* if the shield is weaker than the damage of the obstacle */
-                    else{
+                    else {
                         this.health -= (obstacleDamage - this.shield);
                         this.shield = 0;
                     }
@@ -364,51 +394,42 @@ public class Boat extends Entity {
         }
 
         /* Check for collisions with power ups */
-        ArrayList<PowerUp> powerUps = this.lane.getPowerUps();
-        size = powerUps.size();
-        for (int i = 0; i < size; i++) {
-            PowerUp powerUp = powerUps.get(i);
+        Iterator<PowerUp> powerUpIterator = this.lane.getPowerUps().iterator();
+        while (powerUpIterator.hasNext()) {
+            PowerUp powerUp = powerUpIterator.next();
             if (powerUp.getHitBox().collidesWith(this.hitbox)) {
                 powerUp.dispose();
-                this.lane.removePowerUp(powerUp);
-                size--;
-                this.health -= powerUp.getDamage();
+                // this.lane.removePowerUp(powerUp);
+                powerUpIterator.remove();
 
                 /* give the boat the effect of the power up */
                 String type = powerUp.getType();
                 
-                /* Bomb Power up */
-                if(type == "CLEAR"){
-                    ListIterator<Obstacle> iter = obstacles.listIterator();
-                    while (iter.hasNext()) {
-                        Obstacle obstacle = iter.next();
-                        iter.remove();
-                        obstacle.dispose();
-                        this.lane.removeObstacle(obstacle);
-                    }
+                switch (powerUp.getType()) {
+                    case "CLEAR":
+                        ListIterator<Obstacle> iter = this.lane.getObstacles().listIterator();
+                        while (iter.hasNext()) {
+                            Obstacle obstacle = iter.next();
+                            iter.remove();
+                            obstacle.dispose();
+                            this.lane.removeObstacle(obstacle);
+                        }
+                        break;
+                    case "SPEED":
+                        this.boost += 100;
+                        this.speed += 100;
+                        break;
+                    case "REPAIR":
+                        this.health = this.maxHealth;
+                        break;
+                    case "SHIELD":
+                        this.shield = 50;
+                        break;
+                    case "LATERAL":
+                        break;
+                    default:
+                        break;
                 }
-
-                /* Speed Power up */
-                if(type ==  "SPEED"){
-                    this.speed += 100;
-                }
-
-                /* Repair Power up */
-                if(type ==  "REPAIR"){
-                    this.health = this.maxHealth;
-                }
-
-                /* Shield Power up */
-                if(type == "SHIELD"){
-                    this.shield = 50;
-                }
-
-                /* Lateral Power up */
-                if(type ==  "LATERAL"){
-                    
-                }
-
-
             }
         }
 
@@ -466,6 +487,16 @@ public class Boat extends Entity {
         this.shield += change;
     }
 
+    
+    /**
+     * Increase the current boat boost..
+     *
+     * @param change The amount of boost to be added.
+     */
+    public void addBoost(float change) {
+        this.boost += change;
+    }
+
     /* Getters */
 
     /**
@@ -512,6 +543,15 @@ public class Boat extends Entity {
      */
     public float getShield() {
         return this.shield;
+    }
+
+    /**
+     * Get the current shield of the boat.
+     *
+     * @return The shield of the boat as a float.
+     */
+    public float getBoost() {
+        return this.boost;
     }
 
     /**
