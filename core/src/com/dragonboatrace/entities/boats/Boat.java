@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.dragonboatrace.entities.Entity;
 import com.dragonboatrace.entities.EntityType;
@@ -338,7 +341,8 @@ public class Boat extends Entity {
      *
      * @param batch The SpriteBatch that the renders will be added to.
      */
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, ShapeRenderer renderer) {
+        batch.begin();
         this.lane.render(batch);
 
         layout.setText(healthFont, "Health:  XXX");
@@ -356,6 +360,17 @@ public class Boat extends Entity {
         layout.setText(boostFont, "Boost: XXX");
         boostFont.draw(batch, "Boost: " + (int) this.getBoost(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 205);
         super.render(batch);
+        batch.end();
+        if (this.shield > 0) {
+            Gdx.gl.glEnable(GL20.GL_BLEND);
+            Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+            batch.begin();
+            renderer.setColor(new Color(0, 0, 1, this.shield / 150));
+            renderer.begin(ShapeType.Filled);
+            renderer.circle(this.position.x + (EntityType.BOAT.getWidth() / 2), this.position.y + (EntityType.BOAT.getHeight() / 2), EntityType.BOAT.getHeight() * 0.6f);
+            renderer.end();
+            batch.end();
+        }
     }
 
     /**

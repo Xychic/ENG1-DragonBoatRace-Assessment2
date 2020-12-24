@@ -1,7 +1,5 @@
 package com.dragonboatrace.screens;
 
-import java.io.File;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
@@ -120,7 +118,7 @@ public class MainGameScreen implements Screen {
         this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "exit_button_active.png", "exit_button_inactive.png");
 
 
-        this.save = new Tuple(boatChosen, this.game.getRound());
+        this.save = new Tuple<BoatType, Integer>(boatChosen, this.game.getRound());
 
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
