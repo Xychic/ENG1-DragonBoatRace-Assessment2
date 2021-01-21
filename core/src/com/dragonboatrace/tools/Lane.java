@@ -195,7 +195,7 @@ public class Lane {
      * @param round The current round increases the number of obstacles.
      */
     private void populateList(int round) {
-        for (int i = 0; i < (11 - Config.PLAYER_COUNT + round - 1); i++) {
+        for (int i = 0; i < ((5 - Config.PLAYER_COUNT + round) + (5 * Config.GAME_DIFFICULTY)); i++) {
             replaceObstacle();
         }
     }
