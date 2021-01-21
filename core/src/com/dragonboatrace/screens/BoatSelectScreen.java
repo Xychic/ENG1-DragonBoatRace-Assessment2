@@ -67,7 +67,6 @@ public class BoatSelectScreen implements Screen {
      */
     private final DragonBoatRace game;
 
-
     private final BitmapFont font;
     private final GlyphLayout layout;
 
@@ -93,9 +92,6 @@ public class BoatSelectScreen implements Screen {
         this.agileImage = new Texture("agile.png");
         this.strongImage = new Texture("strong.png");
         this.enduranceImage = new Texture("endurance.png");
-
-
-
 
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
@@ -140,14 +136,14 @@ public class BoatSelectScreen implements Screen {
         this.game.getBatch().draw(this.enduranceImage, this.enduranceButton.getHitBox().getX() + ((this.enduranceButton.getHitBox().getWidth() - this.buttonWidth / 2f) / 2f), 150 + EntityType.BUTTON.getHeight(), this.buttonWidth / 2f, EntityType.BOAT.getHeight() * scale);
         this.enduranceButton.render(this.game.getBatch());
 
-        if (this.fastButton.isHovering() && Gdx.input.isTouched()) {
-            this.game.setScreen(new MainGameScreen(this.game, BoatType.FAST));
-        } else if (this.agileButton.isHovering() && Gdx.input.isTouched()) {
-            this.game.setScreen(new MainGameScreen(this.game, BoatType.AGILE));
-        } else if (this.strongButton.isHovering() && Gdx.input.isTouched()) {
-            this.game.setScreen(new MainGameScreen(this.game, BoatType.STRONG));
-        } else if (this.enduranceButton.isHovering() && Gdx.input.isTouched()) {
-            this.game.setScreen(new MainGameScreen(this.game, BoatType.ENDURANCE));
+        if (this.fastButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+            this.game.setScreen(new DifficultySelectScreen(this.game, BoatType.FAST));
+        } else if (this.agileButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+            this.game.setScreen(new DifficultySelectScreen(this.game, BoatType.AGILE));
+        } else if (this.strongButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+            this.game.setScreen(new DifficultySelectScreen(this.game, BoatType.STRONG));
+        } else if (this.enduranceButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+            this.game.setScreen(new DifficultySelectScreen(this.game, BoatType.ENDURANCE));
         }
 
 

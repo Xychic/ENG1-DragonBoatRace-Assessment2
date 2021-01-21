@@ -45,6 +45,11 @@ public class Config {
      */
     public static String SAVE_FILE_NAME = "/dragonBoatSave.json";
 
+    /** 
+     * The difficulty of the game, changes the number of obstacles
+    */
+    public static int GAME_DIFFICULTY = 1;
+
     /**
      * Set the resolution of the screen.
      *
@@ -100,5 +105,14 @@ public class Config {
      */
     public static void setObstacleCollisionTime(float obstacleCollisionTime) {
         OBSTACLE_COLLISION_TIME = obstacleCollisionTime;
+    }
+
+    /**
+     * Update the game difficulty.
+     * 
+     * @param difficulty the new difficulty.
+     */
+    public static void setGameDifficulty(int difficulty) {
+        GAME_DIFFICULTY = difficulty;
     }
 }
