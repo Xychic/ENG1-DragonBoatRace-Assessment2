@@ -3,6 +3,7 @@ package com.dragonboatrace.entities.boats;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Config;
 
@@ -72,11 +73,14 @@ public class PlayerBoat extends Boat {
      * Renders the players boat with the word "Player" at the top of the lane to indicate which lane is the players.
      *
      * @param batch The SpriteBatch that the renders will be added to.
+     * @param renderer The ShapeRender that renders the shield.
      */
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, ShapeRenderer renderer) {
+        batch.begin();
         layout.setText(nameFont, this.name);
         nameFont.draw(batch, this.name, this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 5);
-        super.render(batch);
+        batch.end();
+        super.render(batch, renderer);
     }
 
     /**

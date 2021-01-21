@@ -3,7 +3,9 @@ package com.dragonboatrace.entities.boats;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.dragonboatrace.entities.Obstacle;
+import com.dragonboatrace.entities.PowerUp;
 import com.dragonboatrace.tools.Hitbox;
 import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Config;
@@ -77,10 +79,14 @@ public class ComputerBoat extends Boat {
     public void update(float deltaTime) {
         if (!recentCollision) {
             /*Check for nearby obstacles */
-            Obstacle closest = checkObstacles();
+            Obstacle closestObstacle = checkObstacles();
+            PowerUp closestPowerUp = checkPowerUps();
             /* Check obstacles will return null if no obstacles nearby */
-            if (closest != null) {
-                this.velocity.set(this.speed * moveFromObject(closest), this.speed);
+            if (closestObstacle != null) {
+                this.velocity.set(this.speed * moveFromObject(closestObstacle), this.speed);
+                this.stamina = (this.stamina < this.maxStamina) ? this.regenerateStamina() + this.stamina : this.maxStamina;
+            } else if (closestPowerUp != null) {
+                this.velocity.set(this.speed * moveToPowerUp(closestPowerUp), this.speed);
                 this.stamina = (this.stamina < this.maxStamina) ? this.regenerateStamina() + this.stamina : this.maxStamina;
             } else {
                 /* Logic for if the Computer should use stamina */
@@ -125,8 +131,10 @@ public class ComputerBoat extends Boat {
      * Also performs {@link Boat}'s render after rendering the markers.
      *
      * @param batch The SpriteBatch that the renders will be added to.
+     * @param renderer The ShapeRender that renders the shield.
      */
-    public void render(SpriteBatch batch) {
+    public void render(SpriteBatch batch, ShapeRenderer renderer) {
+        batch.begin();
         if (this.position.y > Gdx.graphics.getHeight()) {
             batch.draw(up, this.position.x, Gdx.graphics.getHeight() - this.texture.getHeight(), 50, 50);
         } else if (this.position.y < 0) {
@@ -134,7 +142,8 @@ public class ComputerBoat extends Boat {
         } else {
             batch.draw(this.texture, this.position.x, this.position.y);
         }
-        super.render(batch);
+        batch.end();
+        super.render(batch, renderer);
     }
 
     /**
@@ -214,6 +223,59 @@ public class ComputerBoat extends Boat {
         /* If the obstacle is more the right of the boat */
         else {
             return -1;
+        }
+    }
+
+    /**
+     * Check for powerups in the area, specified by moveArea, to move away from.
+     *
+     * @return The closest powerup in the area or null if no powerups are in the area.
+     */
+    private PowerUp checkPowerUps() {
+        List<PowerUp> powerUps = this.lane.getPowerUps();
+        PowerUp closest = null;
+        float smallest = this.position.y + (Gdx.graphics.getHeight() * 0.2f);
+        for (PowerUp p :powerUps) {
+            float bottomY = p.getPos().y;
+            if (bottomY < smallest) {
+                closest = p;
+                smallest = bottomY;
+            }
+        }
+        return closest;
+    }
+
+    /**
+     * Move in the direction towards a power up.
+     *
+     * @param closest The PowerUp to move towards.
+     * @return The direction to move in: <ul>
+     * <li>-1 if the boat should move to the left.</li>
+     * <li>1 if the boat should move to the right.</li>
+     * <li>0 if the boat should move neither way.</li>
+     * </ul>
+     */
+    private int moveToPowerUp(PowerUp closest) {
+        float powerUpLeft = closest.getPos().x;
+        float boatLeft = this.position.x;
+
+        /* Staying away from the edges */
+        if (boatLeft - 10.0f < laneBox.getX()) {
+            return 1;
+        } else if (boatLeft + this.getHitBox().getWidth() + 10.0f > laneBox.getX() + laneBox.getWidth()) {
+            return -1;
+        }
+        /* If the boat and powerup are aligned vertically */
+        if (Float.compare(powerUpLeft, boatLeft) == 0) {
+            return 0;
+        }
+        /* If the powerup is more to the left of the boat */
+        else if (powerUpLeft < boatLeft) {
+            return -1;
+        }
+        /* If the powerup is more the right of the boat */
+        else {
+            return 1;
         }
     }
 

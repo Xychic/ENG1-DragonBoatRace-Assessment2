@@ -157,11 +157,11 @@ public class Race {
         renderer.end();
         batch.begin();
         theFinish.render(batch);
-        player.render(batch);
-        for (Boat boat : this.boats) {
-            boat.render(batch);
-        }
         batch.end();
+        player.render(batch, renderer);
+        for (Boat boat : this.boats) {
+            boat.render(batch, renderer);
+        }
     }
 
     /**
