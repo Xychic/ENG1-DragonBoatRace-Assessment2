@@ -5,12 +5,13 @@ import com.dragonboatrace.tools.Settings;
 /**
  * Represents a Type of Entity.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Babar Khan, Benji Garment, Joe Wrieden
  */
 public enum EntityType {
 
     BOAT(50, 80),
     OBSTACLE(40, 40),
+    POWERUP(50,50),
     FINISH(960, 241),
     BUTTON(400, 140);
 

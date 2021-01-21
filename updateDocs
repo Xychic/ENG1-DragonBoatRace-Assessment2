@@ -1,0 +1,3 @@
+#!/bin/sh
+
+javadoc $(find ./core/src | grep .java) -d ../../docs
