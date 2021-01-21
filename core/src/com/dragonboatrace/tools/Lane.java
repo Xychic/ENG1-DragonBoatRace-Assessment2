@@ -9,6 +9,7 @@ import com.dragonboatrace.entities.PowerUp;
 import com.dragonboatrace.entities.PowerUpType;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Represents a Lane in a {@link Race}.
  *
- * @author Babar Khan, Benji Garment, Joe Wrieden
+ * @author Babar Khan, Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class Lane {
 
@@ -27,15 +28,15 @@ public class Lane {
     /**
      * A list of the obstacles currently in the lane.
      */
-    private final ArrayList<Obstacle> obstacles;
+    private final List<Obstacle> obstacles;
     /**
      * A list of the power ups currently in the lane.
      */
-    private final ArrayList<PowerUp> powerUps;
+    private final List<PowerUp> powerUps;
     /**
      * A list of times to wait before adding a new obstacle to the lane.
      */
-    private final ArrayList<Float> randomWaitTimes;
+    private final List<Float> randomWaitTimes;
 
     /**
      * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
@@ -45,9 +46,9 @@ public class Lane {
      */
     public Lane(Vector2 pos, int width, int round) {
         this.area = new Hitbox(pos.x, pos.y, width, Gdx.graphics.getHeight() + 200);
-        this.obstacles = new ArrayList<>();
-        this.powerUps = new ArrayList<>();
-        this.randomWaitTimes = new ArrayList<>();
+        this.obstacles = new ArrayList<Obstacle>();
+        this.powerUps = new ArrayList<PowerUp>();
+        this.randomWaitTimes = new ArrayList<Float>();
         populateList(round);
     }
 
@@ -120,7 +121,7 @@ public class Lane {
      *
      * @return An {@link ArrayList} of type {@link Obstacle} with all the obstacles in the lane.
      */
-    public ArrayList<Obstacle> getObstacles() {
+    public List<Obstacle> getObstacles() {
         return this.obstacles;
     }
 
@@ -129,7 +130,7 @@ public class Lane {
      *
      * @return An {@link ArrayList} of type {@link PowerUp} with all the power ups in the lane.
      */
-    public ArrayList<PowerUp> getPowerUps() {
+    public List<PowerUp> getPowerUps() {
         return this.powerUps;
     }
 
@@ -194,7 +195,7 @@ public class Lane {
      * @param round The current round increases the number of obstacles.
      */
     private void populateList(int round) {
-        for (int i = 0; i < (11 - Settings.PLAYER_COUNT + round - 1); i++) {
+        for (int i = 0; i < (11 - Config.PLAYER_COUNT + round - 1); i++) {
             replaceObstacle();
         }
     }

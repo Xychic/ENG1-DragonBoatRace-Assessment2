@@ -20,6 +20,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -36,7 +37,7 @@ public class Race {
     /**
      * The list of boats in the race, not including the player.
      */
-    private final ArrayList<Boat> boats;
+    private final List<Boat> boats;
     /**
      * The players boat.
      */
@@ -65,15 +66,15 @@ public class Race {
     public Race(int raceLength, BoatType boatChosen, int round) {
         this.length = raceLength;
         this.theFinish = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth());
-        int size = Gdx.graphics.getWidth() / Settings.PLAYER_COUNT;
+        int size = Gdx.graphics.getWidth() / Config.PLAYER_COUNT;
         this.timer = 0;
 
         player = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), size, round), "Player");
 
         this.barrier = new Texture("line.png");
 
-        boats = new ArrayList<>();
-        for (int i = 1; i < Settings.PLAYER_COUNT; i++) {
+        boats = new ArrayList<Boat>();
+        for (int i = 1; i < Config.PLAYER_COUNT; i++) {
             int rand = ThreadLocalRandom.current().nextInt(0, BoatType.values().length);
             boats.add(new ComputerBoat(BoatType.values()[rand], new Lane(new Vector2(size * i, 0), size, round), "COMP" + i, i));
         }
@@ -105,7 +106,7 @@ public class Race {
         if (player.getDistanceTravelled() + this.theFinish.getHitBox().getHeight() >= this.length) {
             player.setTime(Math.round((System.nanoTime() - this.timer) / 10000000) / (float) 100);
             player.setTotalTime(player.getTime());
-            ArrayList<Float> dnfList = new ArrayList<>();
+            List<Float> dnfList = new ArrayList<Float>();
             for (Boat boat : boats) {
                 if (boat.getTime() == 0) {
                     dnfList.add(boat.getDistanceTravelled());
@@ -144,10 +145,10 @@ public class Race {
      */
     public void render(SpriteBatch batch, ShapeRenderer renderer) {
         renderer.begin(ShapeType.Filled);
-        for (int i = 0; i < Settings.PLAYER_COUNT; i++) {
+        for (int i = 0; i < Config.PLAYER_COUNT; i++) {
             renderer.setColor(Color.DARK_GRAY);
             renderer.rect(
-                (float) Gdx.graphics.getWidth() / Settings.PLAYER_COUNT * i,
+                (float) Gdx.graphics.getWidth() / Config.PLAYER_COUNT * i,
                 0,
                 5,
                 Toolkit.getDefaultToolkit().getScreenSize().height
@@ -169,7 +170,7 @@ public class Race {
      * @param game The instance of the game.
      */
     public void getLeaderBoard(DragonBoatRace game) {
-        ArrayList<Float> times = new ArrayList<>();
+        List<Float> times = new ArrayList<Float>();
         String reason = "";
         player.setTime(this.player.getPenaltyTime());
 
@@ -179,12 +180,12 @@ public class Race {
         }
 
         game.setPlayerTotalTime(times.get(0));
-        for (int i = 0; i < Settings.PLAYER_COUNT; i++) {
+        for (int i = 0; i < Config.PLAYER_COUNT; i++) {
             game.setTimeAt(i, times.get(i));
         }
         boats.add(player);
         Collections.sort(times);
-        ArrayList<Float> dup = new ArrayList<>(findDuplicates(times));
+        List<Float> dup = new ArrayList<Float>(findDuplicates(times));
         if (dup.size() != 0) {
             times.set(times.indexOf(dup.get(0)), (float) (times.get(times.indexOf(dup.get(0))) + 0.02));
         }
@@ -238,9 +239,9 @@ public class Race {
      * @param list An {@link ArrayList} of floats to be combed through.
      * @return An {@link Set} of type float containing unique values.
      */
-    public Set<Float> findDuplicates(ArrayList<Float> list) {
-        final Set<Float> setToReturn = new HashSet<>();
-        final Set<Float> set1 = new HashSet<>();
+    public Set<Float> findDuplicates(List<Float> list) {
+        final Set<Float> setToReturn = new HashSet<Float>();
+        final Set<Float> set1 = new HashSet<Float>();
 
         for (Float yourFloat : list) {
             if (!set1.add(yourFloat)) {

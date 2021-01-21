@@ -1,11 +1,11 @@
 package com.dragonboatrace.tools;
 
 /**
- * Static class used to hold settings
+ * Static class used to hold Config
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
-public class Settings {
+public class Config {
 
     /**
      * The width of the window.
@@ -63,7 +63,7 @@ public class Settings {
      * @param FULLSCREEN A boolean if the window should be fullscreen.
      */
     public static void setFULLSCREEN(boolean FULLSCREEN) {
-        Settings.FULLSCREEN = FULLSCREEN;
+        Config.FULLSCREEN = FULLSCREEN;
     }
 
     /**

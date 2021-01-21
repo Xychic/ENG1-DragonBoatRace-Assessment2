@@ -14,7 +14,7 @@ import com.dragonboatrace.entities.PowerUp;
 import com.dragonboatrace.entities.PowerUpType;
 import com.dragonboatrace.tools.Hitbox;
 import com.dragonboatrace.tools.Lane;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -271,7 +271,7 @@ public class Boat extends Entity {
      */
     protected float velocityPercentage() {
         double result = 0.25 + Math.log(this.stamina + 1) / 3;
-        return (float) result / Settings.STAMINA_SPEED_DIVISION;
+        return (float) result / Config.STAMINA_SPEED_DIVISION;
     }
 
     /**

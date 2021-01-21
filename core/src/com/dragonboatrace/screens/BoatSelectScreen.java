@@ -13,12 +13,12 @@ import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.Button;
 import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.entities.boats.BoatType;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 
 /**
  * Displays the screen that allows the player to choose a boat at the beginning of the game.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class BoatSelectScreen implements Screen {
 
@@ -100,7 +100,7 @@ public class BoatSelectScreen implements Screen {
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size *= 10.0 / Settings.SCALAR;
+        parameter.size *= 10.0 / Config.SCALAR;
         parameter.color = Color.WHITE;
         font = generator.generateFont(parameter);
         layout = new GlyphLayout();
