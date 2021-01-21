@@ -23,7 +23,7 @@ import com.dragonboatrace.entities.Button;
 import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.tools.Race;
 import com.dragonboatrace.tools.ScrollingBackground;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 import com.dragonboatrace.tools.Tuple;
 
 
@@ -125,7 +125,7 @@ public class MainGameScreen implements Screen {
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size *= 10.0 / Settings.SCALAR;
+        parameter.size *= 10.0 / Config.SCALAR;
         parameter.color = Color.BLACK;
         this.font = generator.generateFont(parameter);
         parameter.color = Color.WHITE;
@@ -230,7 +230,7 @@ public class MainGameScreen implements Screen {
 
         this.saveButton.render(this.game.getBatch());
         if (this.saveButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
-            FileHandle saveFile = Gdx.files.external(Settings.SAVE_FILE_NAME);
+            FileHandle saveFile = Gdx.files.external(Config.SAVE_FILE_NAME);
             saveFile.writeString(new Json().toJson(this.save), false);
         }
         this.mainMenuButton.render(this.game.getBatch());

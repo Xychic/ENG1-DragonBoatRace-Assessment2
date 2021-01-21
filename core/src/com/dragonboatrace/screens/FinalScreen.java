@@ -13,7 +13,7 @@ import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.boats.Boat;
 import com.dragonboatrace.entities.boats.BoatType;
 import com.dragonboatrace.entities.boats.PlayerBoat;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 import com.dragonboatrace.tools.Lane;
 
 /**
@@ -44,12 +44,12 @@ public class FinalScreen implements Screen {
      */
     public FinalScreen(DragonBoatRace game, BoatType boatChosen) {
         this.game = game;
-        this.playerBoat = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), Gdx.graphics.getWidth() /  Settings.PLAYER_COUNT, this.game.getRound()), "Player");
+        this.playerBoat = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), Gdx.graphics.getWidth() /  Config.PLAYER_COUNT, this.game.getRound()), "Player");
 
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size *= 5 / Settings.SCALAR;
+        parameter.size *= 5 / Config.SCALAR;
         parameter.color = Color.WHITE;
         this.font = generator.generateFont(parameter);
 
@@ -59,7 +59,7 @@ public class FinalScreen implements Screen {
 
     @Override
     public void show() {
-        Settings.setPlayerCount(4);
+        Config.setPlayerCount(4);
     }
 
     /**
@@ -77,7 +77,7 @@ public class FinalScreen implements Screen {
         font.draw(this.game.getBatch(), "You have made it into the final!", (Gdx.graphics.getWidth() - layout.width) / 2, Gdx.graphics.getHeight() / 2);
 
         layout.setText(font, "Press Space to continue to the final!");
-        font.draw(this.game.getBatch(), "Press Space to continue to the final!", (Gdx.graphics.getWidth() - layout.width) / 2, 100 / Settings.SCALAR + layout.height);
+        font.draw(this.game.getBatch(), "Press Space to continue to the final!", (Gdx.graphics.getWidth() - layout.width) / 2, 100 / Config.SCALAR + layout.height);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             this.game.setScreen(new MainGameScreen(this.game, this.playerBoat.getBoatType()));

@@ -6,15 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.dragonboatrace.entities.Obstacle;
 import com.dragonboatrace.tools.Hitbox;
 import com.dragonboatrace.tools.Lane;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Represents a specific Computer controlled Boat.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class ComputerBoat extends Boat {
 
@@ -102,9 +103,9 @@ public class ComputerBoat extends Boat {
                 recentCollision = true;
             }
         } else {
-            this.velocity.set(0, Settings.OBSTACLE_COLLISION_PENALTY);
+            this.velocity.set(0, Config.OBSTACLE_COLLISION_PENALTY);
             collisionTime += deltaTime;
-            if (collisionTime > Settings.OBSTACLE_COLLISION_TIME) {
+            if (collisionTime > Config.OBSTACLE_COLLISION_TIME) {
                 collisionTime = 0;
                 recentCollision = false;
             }
@@ -166,7 +167,7 @@ public class ComputerBoat extends Boat {
      * @return The closest Obstacle in the area or null if no obstacles are in the area.
      */
     private Obstacle checkObstacles() {
-        ArrayList<Obstacle> obstacles = this.lane.getObstacles();
+        List<Obstacle> obstacles = this.lane.getObstacles();
         Obstacle closest = null;
         float smallest = Gdx.graphics.getHeight();
         for (Obstacle obstacle : obstacles) {

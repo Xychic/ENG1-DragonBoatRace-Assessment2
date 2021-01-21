@@ -10,16 +10,17 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.boats.Boat;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the intermediary screen between rounds that shows the player their place in the previous race and waits
  * for the user to continue on to the next round.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public class RoundsScreen implements Screen {
 
@@ -62,7 +63,7 @@ public class RoundsScreen implements Screen {
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 75 / Settings.SCALAR;
+        parameter.size = 75 / Config.SCALAR;
         parameter.color = Color.WHITE;
 
         this.font = generator.generateFont(parameter);
@@ -74,7 +75,7 @@ public class RoundsScreen implements Screen {
         /* If the leaderboard doesnt fit on the screen */
         if (layout.height > Gdx.graphics.getHeight() / 2f) {
             /* Scale the font to fit on the screen. */
-            int a = 75 / Settings.SCALAR;
+            int a = 75 / Config.SCALAR;
             int c = Gdx.graphics.getHeight() / 2;
             float b = layout.height / c;
             parameter.size = (int) (a / b);
@@ -100,14 +101,14 @@ public class RoundsScreen implements Screen {
         this.game.getBatch().begin();
 
         layout.setText(font, "Well done for completing round " + (this.currentRound - 1) + " in " + this.playerBoat.getTime() + "s");
-        font.draw(this.game.getBatch(), "Well done for completing round " + (this.currentRound - 1) + " in " + this.playerBoat.getTime() + "s", (Gdx.graphics.getWidth() - layout.width) / 2, Gdx.graphics.getHeight() - 75 / Settings.SCALAR);
+        font.draw(this.game.getBatch(), "Well done for completing round " + (this.currentRound - 1) + " in " + this.playerBoat.getTime() + "s", (Gdx.graphics.getWidth() - layout.width) / 2, Gdx.graphics.getHeight() - 75 / Config.SCALAR);
 
         layout.setText(font, "With " + this.playerBoat.getPenaltyTime() + "s of that in penalties");
-        font.draw(this.game.getBatch(), "With " + this.playerBoat.getPenaltyTime() + "s of that in penalties", (Gdx.graphics.getWidth() - layout.width) / 2, Gdx.graphics.getHeight() - 175f / Settings.SCALAR);
+        font.draw(this.game.getBatch(), "With " + this.playerBoat.getPenaltyTime() + "s of that in penalties", (Gdx.graphics.getWidth() - layout.width) / 2, Gdx.graphics.getHeight() - 175f / Config.SCALAR);
 
 
         layout.setText(leaderBoardFont, this.reason);
-        leaderBoardFont.draw(this.game.getBatch(), this.reason, (Gdx.graphics.getWidth() - layout.width) / 2, (Gdx.graphics.getHeight() + layout.height) / 2 - 75f / Settings.SCALAR);
+        leaderBoardFont.draw(this.game.getBatch(), this.reason, (Gdx.graphics.getWidth() - layout.width) / 2, (Gdx.graphics.getHeight() + layout.height) / 2 - 75f / Config.SCALAR);
 
 
         layout.setText(font, (this.currentRound == 4) ? "Press Space to see if you made it to the final" : "Press Space to continue to round " + (this.currentRound));
@@ -117,9 +118,9 @@ public class RoundsScreen implements Screen {
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
             if (this.game.getRound() > 3) {
-                ArrayList<Float> temp = this.game.getTotalTimes();
+                List<Float> temp = this.game.getTotalTimes();
                 Collections.sort(temp);
-                ArrayList<Float> topPlayers = new ArrayList<>(temp.subList(0, 4));
+                List<Float> topPlayers = new ArrayList<Float>(temp.subList(0, 4));
                 if (topPlayers.contains(this.game.getPlayerTotalTime())) {
                     this.game.setScreen(new FinalScreen(this.game, this.playerBoat.getBoatType()));
                 } else {

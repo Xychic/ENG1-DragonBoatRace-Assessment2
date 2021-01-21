@@ -11,7 +11,7 @@ import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.Button;
 import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.entities.boats.BoatType;
-import com.dragonboatrace.tools.Settings;
+import com.dragonboatrace.tools.Config;
 import com.dragonboatrace.tools.Tuple;
 
 
@@ -70,19 +70,19 @@ public class MainMenuScreen implements Screen {
         this.saveGame = false;
         FileHandle dirHandle = Gdx.files.external("/");
         for (FileHandle entry: dirHandle.list()) {
-            if (entry.toString().contains(Settings.SAVE_FILE_NAME)) {
+            if (entry.toString().contains(Config.SAVE_FILE_NAME)) {
                 this.saveGame = true;
                 break;
             }
         }
 
-        this.playButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 600f / Settings.SCALAR), "play_button_active.png", "play_button_inactive.png");
-        this.helpButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 450f / Settings.SCALAR), "help_button_active.png", "help_button_inactive.png");
-        this.loadButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 300f / Settings.SCALAR), this.saveGame ? "load_button_active.png" : "load_button_disabled.png", this.saveGame ? "load_button_inactive.png" : "load_button_disabled.png");
-        this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 150f / Settings.SCALAR), "exit_button_active.png", "exit_button_inactive.png");
+        this.playButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 600f / Config.SCALAR), "play_button_active.png", "play_button_inactive.png");
+        this.helpButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 450f / Config.SCALAR), "help_button_active.png", "help_button_inactive.png");
+        this.loadButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 300f / Config.SCALAR), this.saveGame ? "load_button_active.png" : "load_button_disabled.png", this.saveGame ? "load_button_inactive.png" : "load_button_disabled.png");
+        this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 150f / Config.SCALAR), "exit_button_active.png", "exit_button_inactive.png");
         this.logo = new Texture("dragon.png");
-        logoXOffset = 680f / Settings.SCALAR;
-        logoYOffset = 600f / Settings.SCALAR;
+        logoXOffset = 680f / Config.SCALAR;
+        logoYOffset = 600f / Config.SCALAR;
     }
 
 
@@ -128,7 +128,7 @@ public class MainMenuScreen implements Screen {
      * Loads a saved game from a file
      */
     private void loadGame() {
-        FileHandle saveFile = Gdx.files.external(Settings.SAVE_FILE_NAME);
+        FileHandle saveFile = Gdx.files.external(Config.SAVE_FILE_NAME);
         Tuple<BoatType, Integer> save = new Json().fromJson(Tuple.class, saveFile.readString());
         this.game.setRound(save.snd());
         if (this.game.getRound() > 3) {
