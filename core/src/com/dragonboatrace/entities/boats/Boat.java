@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 import com.dragonboatrace.entities.Entity;
 import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.entities.Obstacle;
@@ -199,7 +200,43 @@ public class Boat extends Entity {
 
         /* Store the lanes hit box to save time on using Getters. */
         laneBox = lane.getHitbox();
+        generateFonts();
+    }
 
+    /**
+     * Creates a Boat with the specified BoatType for pre-defined values,
+     * a Lane to give the boat its position and a name for easy identification.
+     *
+     * @param boat The type of boat to use as a template.
+     * @param lane The lane the boat is in.
+     * @param name The name of the boat.
+     * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
+     */
+    public Boat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data) {
+        super(pos, vel, EntityType.BOAT, boat.getImageSrc());
+        this.shield = data.getInt("shield");
+        this.boost = data.getInt("boost");
+        this.maxHealth = boat.getHealth();
+        this.health = data.getFloat("health");
+        this.stamina = data.getFloat("stamina");
+        this.agility = boat.getAgility();
+        this.speed = boat.getSpeed();
+        this.maxStamina = boat.getStamina();
+        this.lane = lane;
+        this.name = name;
+        this.boatType = boat;
+        this.time = data.getFloat("time");
+        this.totalTime = data.getFloat("totalTime");
+        this.penaltyTime = data.getFloat("penaltyTime");
+
+        laneBox = lane.getHitbox();
+        generateFonts();
+    }
+
+    /**
+     * Method to generate the fonts needed for displaying the text.
+     */
+    private void generateFonts() {
         /* Setup fonts to use in the HUD */
         this.generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
         this.parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -264,7 +301,6 @@ public class Boat extends Entity {
             parameter.color = Color.YELLOW;
             boostFont = generator.generateFont(parameter);
         }
-
     }
 
     /**
@@ -417,9 +453,6 @@ public class Boat extends Entity {
                 powerUp.dispose();
                 // this.lane.removePowerUp(powerUp);
                 powerUpIterator.remove();
-
-                /* give the boat the effect of the power up */
-                String type = powerUp.getType();
                 
                 switch (powerUp.getType()) {
                     case "CLEAR":
@@ -660,5 +693,29 @@ public class Boat extends Entity {
 
         this.lane.dispose();
         super.dispose();
+    }
+
+    /**
+     * Creates a JSON string needed to fully reconstruct the class.
+     * 
+     * @return JSON String contain all values needed to reconstruct the class.
+     */
+    public String toJson() {
+        return String.format("{pos:{x:%f, y:%f}, vel:{x:%f, y:%f}, type:%s, lane:%s, name:%s, data:{shield:%f, boost:%f, health:%f, stamina:%f, time:%f, totalTime:%f, penaltyTime:%f}}", 
+            this.position.x,
+            this.position.y,
+            this.velocity.x,
+            this.velocity.y,
+            this.boatType,
+            this.lane.toJson(),
+            this.name,
+            this.shield,
+            this.boost,
+            this.health,
+            this.stamina,
+            this.time,
+            this.totalTime,
+            this.penaltyTime
+        );
     }
 }

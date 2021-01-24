@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Config;
 
@@ -23,6 +25,18 @@ public class PlayerBoat extends Boat {
      */
     public PlayerBoat(BoatType boat, Lane lane, String name) {
         super(boat, lane, name);
+    }
+
+    /**
+     * Creates a player boat with values from boat, in Lane lane, and an identifying name.
+     *
+     * @param boat The BoatType to get values from.
+     * @param lane The lane the boat is racing in.
+     * @param name The name of the boat.
+     * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
+     */
+    public PlayerBoat (Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data) {
+        super(pos, vel, boat, lane, name, data);
     }
 
     /**

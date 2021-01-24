@@ -1,7 +1,5 @@
 package com.dragonboatrace.screens;
 
-import java.io.File;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
@@ -15,7 +13,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.files.FileHandle;
 import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.boats.BoatType;
@@ -24,7 +23,6 @@ import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.tools.Race;
 import com.dragonboatrace.tools.ScrollingBackground;
 import com.dragonboatrace.tools.Config;
-import com.dragonboatrace.tools.Tuple;
 
 
 /**
@@ -90,15 +88,6 @@ public class MainGameScreen implements Screen {
      * The String being displayed in the countdown.
      */
     private String countDownString = "";
-    // /**
-    //  * The JSON file to save the game with
-    //  */
-    // private Json jsonFile;
-    
-    /**
-     * A Tuple storing the players boatType and the current round.
-     */
-    private Tuple<BoatType, Integer> save;
 
     /**
      * Creates a new game screen with a game instance.
@@ -119,8 +108,62 @@ public class MainGameScreen implements Screen {
         this.mainMenuButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "main_menu_button_active.png", "main_menu_button_inactive.png");
         this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "exit_button_active.png", "exit_button_inactive.png");
 
+        /* Font related items */
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size *= 10.0 / Config.SCALAR;
+        parameter.color = Color.BLACK;
+        this.font = generator.generateFont(parameter);
+        parameter.color = Color.WHITE;
+        this.fontWhite = generator.generateFont(parameter); 
+        this.layout = new GlyphLayout();
 
-        this.save = new Tuple(boatChosen, this.game.getRound());
+        /* Countdown initialisation */
+        Timer.Task countDownTask = new Timer.Task() {
+            @Override
+            public void run() {
+                paused = true;
+                if (countDownRemaining == 3) {
+                    countDownString = "READY";
+                    countDownRemaining--;
+                } else if (countDownRemaining == 2) {
+                    countDownString = "STEADY";
+                    countDownRemaining--;
+                } else if (countDownRemaining == 1) {
+                    countDownString = "GO";
+                    countDownRemaining--;
+                } else {
+                    countDownRemaining = -1;
+                    countDownString = "";
+                    paused = false;
+                    this.cancel();
+                }
+            }
+        };
+        timer = new Timer();
+        timer.scheduleTask(countDownTask, 0, 1);
+        // We don't want the countdown to start before the screen has displayed.
+        timer.stop();
+    }
+
+    /**
+     * Creates a new game screen with a game instance.
+     *
+     * @param game The game instance.
+     * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
+     */
+    public MainGameScreen(DragonBoatRace game, JsonValue data) {
+        this.game = game;
+
+        this.logger = new FPSLogger();
+
+        this.race = new Race(data);
+        this.background = new ScrollingBackground();
+        this.background.resize(Gdx.graphics.getWidth());
+
+        this.saveButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.5f), "save_button_active.png", "save_button_inactive.png");
+        this.mainMenuButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "main_menu_button_active.png", "main_menu_button_inactive.png");
+        this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "exit_button_active.png", "exit_button_inactive.png");
 
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
@@ -231,7 +274,7 @@ public class MainGameScreen implements Screen {
         this.saveButton.render(this.game.getBatch());
         if (this.saveButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
             FileHandle saveFile = Gdx.files.external(Config.SAVE_FILE_NAME);
-            saveFile.writeString(new Json().toJson(this.save), false);
+            saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
         }
         this.mainMenuButton.render(this.game.getBatch());
         if (this.mainMenuButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {

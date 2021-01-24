@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.dragonboatrace.DragonBoatRace;
 import com.dragonboatrace.entities.Button;
 import com.dragonboatrace.entities.EntityType;
@@ -129,13 +131,11 @@ public class MainMenuScreen implements Screen {
      */
     private void loadGame() {
         FileHandle saveFile = Gdx.files.external(Config.SAVE_FILE_NAME);
-        Tuple<BoatType, Integer> save = new Json().fromJson(Tuple.class, saveFile.readString());
-        this.game.setRound(save.snd());
-        if (this.game.getRound() > 3) {
-            game.setScreen(new FinalScreen(this.game, save.fst()));
-        } else {
-            game.setScreen(new MainGameScreen(this.game, save.fst()));
-        }
+        JsonValue jsonData = new JsonReader().parse(saveFile.readString());
+        int round = jsonData.getInt("round");
+        this.game.setRound(round);
+        game.setScreen(new MainGameScreen(this.game, jsonData));
+
     }
 
     @Override
