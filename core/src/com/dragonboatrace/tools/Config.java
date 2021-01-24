@@ -1,5 +1,10 @@
 package com.dragonboatrace.tools;
 
+import java.io.File;
+import java.net.URISyntaxException;
+
+import com.dragonboatrace.DragonBoatRace;
+
 /**
  * Static class used to hold Config
  *
@@ -40,15 +45,27 @@ public class Config {
      */
     public static float OBSTACLE_COLLISION_TIME = 0.5f;
 
-    /**
-     * The name of the save file
-     */
-    public static String SAVE_FILE_NAME = "/dragonBoatSave.json";
-
     /** 
      * The difficulty of the game, changes the number of obstacles
     */
     public static int GAME_DIFFICULTY = 1;
+
+    /**
+     * The name of the save file
+     */
+    public static String SAVE_FILE_NAME = getSaveFile();
+
+    /**
+     * 
+     * @return A string to the save file location.
+     */
+    private static String getSaveFile(){
+        try {
+            return new File(DragonBoatRace.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toPath().resolve("../dragonBoatSave.json").normalize().toString();
+        } catch (URISyntaxException exception) {
+            return null;
+        }
+    }
 
     /**
      * Set the resolution of the screen.

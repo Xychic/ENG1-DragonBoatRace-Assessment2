@@ -1,5 +1,7 @@
 package com.dragonboatrace.screens;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
@@ -273,8 +275,10 @@ public class MainGameScreen implements Screen {
 
         this.saveButton.render(this.game.getBatch());
         if (this.saveButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
-            FileHandle saveFile = Gdx.files.external(Config.SAVE_FILE_NAME);
-            saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+            if (Config.SAVE_FILE_NAME != null) {
+                FileHandle saveFile = new FileHandle(new File(Config.SAVE_FILE_NAME));
+                saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+            }
         }
         this.mainMenuButton.render(this.game.getBatch());
         if (this.mainMenuButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {

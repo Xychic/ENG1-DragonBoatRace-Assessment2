@@ -1,5 +1,7 @@
 package com.dragonboatrace.screens;
 
+import java.io.File;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -69,14 +71,7 @@ public class MainMenuScreen implements Screen {
     public MainMenuScreen(DragonBoatRace game) {
         this.game = game;
 
-        this.saveGame = false;
-        FileHandle dirHandle = Gdx.files.external("/");
-        for (FileHandle entry: dirHandle.list()) {
-            if (entry.toString().contains(Config.SAVE_FILE_NAME)) {
-                this.saveGame = true;
-                break;
-            }
-        }
+        this.saveGame = new File(Config.SAVE_FILE_NAME).exists();
 
         this.playButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 600f / Config.SCALAR), "play_button_active.png", "play_button_inactive.png");
         this.helpButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 450f / Config.SCALAR), "help_button_active.png", "help_button_inactive.png");
@@ -130,7 +125,7 @@ public class MainMenuScreen implements Screen {
      * Loads a saved game from a file
      */
     private void loadGame() {
-        FileHandle saveFile = Gdx.files.external(Config.SAVE_FILE_NAME);
+        FileHandle saveFile = new FileHandle(new File(Config.SAVE_FILE_NAME));
         JsonValue jsonData = new JsonReader().parse(saveFile.readString());
         int round = jsonData.getInt("round");
         this.game.setRound(round);
