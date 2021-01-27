@@ -127,7 +127,7 @@ public class MainMenuScreen implements Screen {
     private void loadGame() {
         FileHandle saveFile = new FileHandle(new File(Config.SAVE_FILE_NAME));
         JsonValue jsonData = new JsonReader().parse(saveFile.readString());
-        int round = jsonData.getInt("round");
+        int round = jsonData.get("race").getInt("round");
         this.game.setRound(round);
         game.setScreen(new MainGameScreen(this.game, jsonData));
 

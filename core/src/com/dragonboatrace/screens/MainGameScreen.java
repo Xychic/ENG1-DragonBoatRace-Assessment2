@@ -102,7 +102,7 @@ public class MainGameScreen implements Screen {
 
         this.logger = new FPSLogger();
 
-        this.race = new Race(10000, boatChosen, this.game.getRound());
+        this.race = new Race(10000 + (1000 * Config.GAME_DIFFICULTY), boatChosen, this.game.getRound());
         this.background = new ScrollingBackground();
         this.background.resize(Gdx.graphics.getWidth());
 
@@ -132,7 +132,7 @@ public class MainGameScreen implements Screen {
                     countDownString = "STEADY";
                     countDownRemaining--;
                 } else if (countDownRemaining == 1) {
-                    countDownString = "GO";
+                    countDownString = "GO!";
                     countDownRemaining--;
                 } else {
                     countDownRemaining = -1;
@@ -158,8 +158,8 @@ public class MainGameScreen implements Screen {
         this.game = game;
 
         this.logger = new FPSLogger();
-
-        this.race = new Race(data);
+        Config.setGameDifficulty(data.getInt("difficulty"));
+        this.race = new Race(data.get("race"));
         this.background = new ScrollingBackground();
         this.background.resize(Gdx.graphics.getWidth());
 
@@ -189,7 +189,7 @@ public class MainGameScreen implements Screen {
                     countDownString = "STEADY";
                     countDownRemaining--;
                 } else if (countDownRemaining == 1) {
-                    countDownString = "GO";
+                    countDownString = "GO!";
                     countDownRemaining--;
                 } else {
                     countDownRemaining = -1;
@@ -277,7 +277,7 @@ public class MainGameScreen implements Screen {
         if (this.saveButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
             if (Config.SAVE_FILE_NAME != null) {
                 FileHandle saveFile = new FileHandle(new File(Config.SAVE_FILE_NAME));
-                saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                saveFile.writeString(new JsonReader().parse(this.toJson()).toString(), false);
             }
         }
         this.mainMenuButton.render(this.game.getBatch());
@@ -314,5 +314,12 @@ public class MainGameScreen implements Screen {
     @Override
     public void dispose() {
         this.game.getBatch().dispose();
+    }
+
+    public String toJson() {
+        return String.format("{difficulty: %d, race:%s}",
+            Config.GAME_DIFFICULTY,
+            this.race.toJson()
+        );
     }
 }

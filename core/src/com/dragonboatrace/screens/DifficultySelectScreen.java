@@ -1,6 +1,7 @@
 package com.dragonboatrace.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -137,7 +138,9 @@ public class DifficultySelectScreen implements Screen {
         } else if (this.hardButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
             Config.setGameDifficulty(2);
             this.game.setScreen(new MainGameScreen(this.game, this.boatType));
-        } 
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            this.game.setScreen(new BoatSelectScreen(this.game));
+        }
 
         this.game.getBatch().end();
 
