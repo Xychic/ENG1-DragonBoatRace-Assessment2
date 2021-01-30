@@ -685,8 +685,6 @@ public class Boat extends Entity {
         return this.distanceTravelled;
     }
 
-    public Vector2 getPos() {return this.position;}
-
     /**
      * Dispose of the fonts used in the HUD and then perform {@link Entity}'s dispose.
      */

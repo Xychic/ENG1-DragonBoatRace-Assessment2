@@ -249,10 +249,6 @@ public class MainGameScreen implements Screen {
             }
         }
         if (!paused) {
-            System.out.println("GAME");
-            for (Boat b : this.race.getBoat()){
-                System.out.println(b.getPos());
-            }
             this.logger.log();
             this.background.update(deltaTime * this.race.getPlayer().getVelocity().y);
             this.background.render(game.getBatch());
@@ -262,10 +258,6 @@ public class MainGameScreen implements Screen {
             this.background.render(game.getBatch());
             this.race.render(game.getBatch(), game.getRenderer());
             displayCountDown();
-            System.out.println("COUNTDOWN");
-            for (Boat b : this.race.getBoat()){
-                System.out.println(b.getPos());
-            }
         } else {
             this.background.render(game.getBatch());
             this.race.render(game.getBatch(), game.getRenderer());
@@ -316,7 +308,7 @@ public class MainGameScreen implements Screen {
             if (this.slot1Button.isHovering() && Gdx.input.isButtonJustPressed(0)) {
                 if (Config.SAVE_FILE_LOCATION != null) {
                     FileHandle saveFile = new FileHandle(new File(String.format("%s/dragonBoatSave-1.json", Config.SAVE_FILE_LOCATION)));
-                    saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                    saveFile.writeString(new JsonReader().parse(this.toJson()).toString(), false);
                     this.saving = false;
                 }
             }
@@ -324,7 +316,7 @@ public class MainGameScreen implements Screen {
             if (this.slot2Button.isHovering() && Gdx.input.isButtonJustPressed(0)) {
                 if (Config.SAVE_FILE_LOCATION != null) {
                     FileHandle saveFile = new FileHandle(new File(String.format("%s/dragonBoatSave-2.json", Config.SAVE_FILE_LOCATION)));
-                    saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                    saveFile.writeString(new JsonReader().parse(this.toJson()).toString(), false);
                     this.saving = false;
                 }
             }
@@ -332,7 +324,7 @@ public class MainGameScreen implements Screen {
             if (this.slot3Button.isHovering() && Gdx.input.isButtonJustPressed(0)) {
                 if (Config.SAVE_FILE_LOCATION != null) {
                     FileHandle saveFile = new FileHandle(new File(String.format("%s/dragonBoatSave-3.json", Config.SAVE_FILE_LOCATION)));
-                    saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                    saveFile.writeString(new JsonReader().parse(this.toJson()).toString(), false);
                     this.saving = false;
                 }
             }
