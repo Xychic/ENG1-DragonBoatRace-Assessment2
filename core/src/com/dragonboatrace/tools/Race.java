@@ -5,6 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonValue.JsonIterator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.dragonboatrace.DragonBoatRace;
@@ -45,7 +48,7 @@ public class Race {
     /**
      * The finish line.
      */
-    private final FinishLine theFinish;
+    private final FinishLine finishLine;
     /**
      * The separator between each lane.
      */
@@ -56,6 +59,8 @@ public class Race {
      */
     private float timer;
 
+    private int round;
+
     /**
      * Creates a new race of a specified length.
      *
@@ -65,11 +70,12 @@ public class Race {
      */
     public Race(int raceLength, BoatType boatChosen, int round) {
         this.length = raceLength;
-        this.theFinish = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth());
+        this.round = round;
+        this.finishLine = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth());
         int size = Gdx.graphics.getWidth() / Config.PLAYER_COUNT;
         this.timer = 0;
 
-        player = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), size, round), "Player");
+        this.player = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), size, round), "Player");
 
         this.barrier = new Texture("line.png");
 
@@ -81,6 +87,38 @@ public class Race {
         this.timer = System.nanoTime();
     }
 
+    public Race(JsonValue data) {
+        this.length = data.getInt("length");
+        this.round = data.getInt("round");
+        this.finishLine = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth());
+        this.timer = 0;
+
+        JsonValue playerJson = data.get("player");
+        BoatType boatType = new Json().fromJson(BoatType.class, playerJson.getString("type"));
+        Lane lane = new Lane(playerJson.get("lane"));
+        String name = playerJson.getString("name");
+        Vector2 pos = new Vector2(playerJson.get("pos").getFloat("x"), playerJson.get("pos").getFloat("y"));
+        Vector2 vel = new Vector2(playerJson.get("vel").getFloat("x"), playerJson.get("vel").getFloat("y"));
+        this.player = new PlayerBoat(pos, vel, boatType, lane, name, playerJson.get("data"));
+
+        this.barrier = new Texture("line.png");
+
+        this.boats = new ArrayList<Boat>();
+        JsonIterator boatIter = data.get("boats").iterator();
+        while (boatIter.hasNext()) {
+            int boatNum = 1;
+            JsonValue boatJson = boatIter.next();
+            BoatType CPUBoatType = new Json().fromJson(BoatType.class, boatJson.getString("type"));
+            Lane CPULane = new Lane(boatJson.get("lane"));
+            String CPUName = boatJson.getString("name");
+            Vector2 boatPos = new Vector2(boatJson.get("pos").getFloat("x"), boatJson.get("pos").getFloat("y"));
+            Vector2 boatVel = new Vector2(boatJson.get("vel").getFloat("x"), boatJson.get("vel").getFloat("y"));
+            this.boats.add(new ComputerBoat(boatPos, boatVel, CPUBoatType, CPULane, CPUName, boatJson.get("data"), boatNum++));
+        }
+
+        this.timer = System.nanoTime();
+    }
+
     /**
      * Update the race in respects to the amount of time passed since the last frame.
      *
@@ -88,9 +126,9 @@ public class Race {
      * @param game The instance of the game.
      */
     public void update(float deltaTime, DragonBoatRace game) {
-        player.updateYPosition(this.theFinish.getHitBox().getHeight(), length);
+        player.updateYPosition(this.finishLine.getHitBox().getHeight(), length);
         player.update(deltaTime);
-        theFinish.update(player.getDistanceTravelled(), this.length, deltaTime, player.getVelocity().y);
+        finishLine.update(player.getDistanceTravelled(), this.length, deltaTime, player.getVelocity().y);
         if (player.getHealth() <= 0) {
             game.setScreen(new GameOverScreen(game, "Your boat is broken. Better luck next time!"));
         }
@@ -98,12 +136,12 @@ public class Race {
 
             ((ComputerBoat) boat).updateYPosition(player.getHitBox().getY(), player.getDistanceTravelled());
             boat.update(deltaTime);
-            if (boat.getDistanceTravelled() + this.theFinish.getHitBox().getHeight() >= this.length && boat.getTime() == 0) {
+            if (boat.getDistanceTravelled() + this.finishLine.getHitBox().getHeight() >= this.length && boat.getTime() == 0) {
                 boat.setTime(Math.round((System.nanoTime() - this.timer) / 10000000) / (float) 100);
                 boat.setTotalTime(boat.getTime());
             }
         }
-        if (player.getDistanceTravelled() + this.theFinish.getHitBox().getHeight() >= this.length) {
+        if (player.getDistanceTravelled() + this.finishLine.getHitBox().getHeight() >= this.length) {
             player.setTime(Math.round((System.nanoTime() - this.timer) / 10000000) / (float) 100);
             player.setTotalTime(player.getTime());
             List<Float> dnfList = new ArrayList<Float>();
@@ -156,7 +194,7 @@ public class Race {
         }
         renderer.end();
         batch.begin();
-        theFinish.render(batch);
+        finishLine.render(batch);
         batch.end();
         player.render(batch, renderer);
         for (Boat boat : this.boats) {
@@ -260,11 +298,26 @@ public class Race {
         return this.player;
     }
 
+    public List<Boat> getBoat() {return this.boats;}
+
     public void dispose() {
         for (Boat boat : this.boats) {
             boat.dispose();
         }
-        this.theFinish.dispose();
+        this.finishLine.dispose();
         this.barrier.dispose();
+    }
+
+    public String toJson() {
+        String[] CPUBoatJson = new String[this.boats.size()];
+        for (int i=0;i<this.boats.size();i++){
+            CPUBoatJson[i] = this.boats.get(i).toJson();
+        }
+        return String.format("{length:%d, round:%d, player:%s, boats:[%s]}", 
+            this.length,
+            this.round,
+            this.player.toJson(),
+            String.join(",", CPUBoatJson)
+        );
     }
 }

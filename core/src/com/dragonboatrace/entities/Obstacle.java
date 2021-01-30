@@ -2,6 +2,7 @@ package com.dragonboatrace.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,6 +22,8 @@ public class Obstacle extends Entity {
      */
     private final float damage;
 
+    private final ObstacleType obstacleType;
+
     /**
      * Creates a new Obstacle of a specific type and bounds in which it can be created.
      *
@@ -35,6 +38,14 @@ public class Obstacle extends Entity {
         super(new Vector2(((int) startX + width) / 2.0f + ThreadLocalRandom.current().nextInt(-((int) startX + width) / 2 + EntityType.OBSTACLE.getWidth() / 2, ((int) startX + width) / 2 + EntityType.OBSTACLE.getWidth() / 2), Gdx.graphics.getHeight()), new Vector2(), EntityType.OBSTACLE, type.getTexture());
         this.speed = type.getSpeed();
         this.damage = type.getDamage();
+        this.obstacleType = type;
+    }
+
+    public Obstacle(ObstacleType type, Vector2 pos) {
+        super(pos, new Vector2(), EntityType.OBSTACLE, type.getTexture());
+        this.speed = type.getSpeed();
+        this.damage = type.getDamage();
+        this.obstacleType = type;
     }
 
     /**
@@ -75,4 +86,12 @@ public class Obstacle extends Entity {
         return this.position;
     }
 
+    public String toJson(){
+        String s = String.format("{type:%s, pos:{x:%f, y:%f}}", 
+            this.obstacleType, 
+            this.position.x,
+            this.position.y
+        );
+        return s;
+    }
 }

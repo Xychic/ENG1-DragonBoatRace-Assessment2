@@ -4,13 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonValue;
 import com.dragonboatrace.entities.Obstacle;
 import com.dragonboatrace.entities.PowerUp;
 import com.dragonboatrace.tools.Hitbox;
 import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Config;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -61,6 +62,18 @@ public class ComputerBoat extends Boat {
      */
     public ComputerBoat(BoatType boat, Lane lane, String name, int pickSpeedValue) {
         super(boat, lane, name);
+        this.speed = this.pickSpeed(pickSpeedValue);
+        this.xOffset = this.getHitBox().getWidth() / pickSpeedValue;
+        int yOffset = this.getHitBox().getHeight() / pickSpeedValue;
+        this.moveArea = new Hitbox(this.position.x - xOffset, this.position.y, this.getHitBox().getWidth() + 2 * xOffset, this.getHitBox().getHeight() + 2 * yOffset);
+        this.up = new Texture("up_arrow.png");
+        this.down = new Texture("down_arrow.png");
+        this.randomWait = 0;
+        this.waiting = false;
+    }
+
+    public ComputerBoat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data, int pickSpeedValue) {
+        super(pos, vel, boat, lane, name, data);
         this.speed = this.pickSpeed(pickSpeedValue);
         this.xOffset = this.getHitBox().getWidth() / pickSpeedValue;
         int yOffset = this.getHitBox().getHeight() / pickSpeedValue;

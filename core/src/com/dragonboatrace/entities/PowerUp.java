@@ -2,6 +2,7 @@ package com.dragonboatrace.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -37,6 +38,13 @@ public class PowerUp extends Entity {
         /* First vector is long as to start it at a random x position within the bounds of the screen */
         /* Form of Entity(Vector2 pos, Vector2 vel, EntityType type, String texture) */
         super(new Vector2(((int) startX + width) / 2.0f + ThreadLocalRandom.current().nextInt(-((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2, ((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2), Gdx.graphics.getHeight()), new Vector2(), EntityType.POWERUP, type.getTexture());
+        this.speed = type.getSpeed();
+        this.damage = type.getDamage();
+        this.type = type;
+    }
+
+    public PowerUp(PowerUpType type, Vector2 pos) {
+        super(pos, new Vector2(), EntityType.POWERUP, type.getTexture());
         this.speed = type.getSpeed();
         this.damage = type.getDamage();
         this.type = type;
@@ -87,5 +95,14 @@ public class PowerUp extends Entity {
      */
     public String getType() {
         return this.type.toString();
+    }
+
+    public String toJson(){
+        String s = String.format("{type:%s, pos:{x:%f, y:%f}}", 
+            this.type, 
+            this.position.x,
+            this.position.y
+        );
+        return s;
     }
 }

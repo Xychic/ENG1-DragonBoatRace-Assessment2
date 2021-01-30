@@ -3,6 +3,10 @@ package com.dragonboatrace.tools;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonValue.JsonIterator;
 import com.dragonboatrace.entities.Obstacle;
 import com.dragonboatrace.entities.ObstacleType;
 import com.dragonboatrace.entities.PowerUp;
@@ -38,6 +42,10 @@ public class Lane {
      */
     private final List<Float> randomWaitTimes;
 
+    private final Vector2 position;
+    private final int width;
+    private final int round;
+
     /**
      * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
      * @param pos The position of the lane in the screen.
@@ -46,10 +54,52 @@ public class Lane {
      */
     public Lane(Vector2 pos, int width, int round) {
         this.area = new Hitbox(pos.x, pos.y, width, Gdx.graphics.getHeight() + 200);
+        this.position = pos;
+        this.width = width;
+        this.round = round;
+
         this.obstacles = new ArrayList<Obstacle>();
         this.powerUps = new ArrayList<PowerUp>();
         this.randomWaitTimes = new ArrayList<Float>();
         populateList(round);
+    }
+
+    /**
+     * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
+     * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
+     */
+    public Lane(JsonValue data) {
+        this.position = new Vector2(data.get("pos").getFloat("x"), data.get("pos").getFloat("y"));
+        this.width = data.getInt("width");
+        this.round = data.getInt("round");
+        this.area = new Hitbox(this.position.x, this.position.y, this.width, Gdx.graphics.getHeight() + 200);
+
+
+        this.obstacles = new ArrayList<Obstacle>();
+        this.powerUps = new ArrayList<PowerUp>();
+        this.randomWaitTimes = new ArrayList<Float>();
+        
+        JsonIterator obstacleIter = data.get("obstacles").iterator();
+        while (obstacleIter.hasNext()) {
+            JsonValue obstacleJson = obstacleIter.next();
+            ObstacleType t = new Json().fromJson(ObstacleType.class, obstacleJson.getString("type"));
+            Vector2 objectPos = new Vector2(obstacleJson.get("pos").getFloat("x"), obstacleJson.get("pos").getFloat("y"));
+            this.obstacles.add(new Obstacle(t, objectPos));
+        }
+
+        JsonIterator powerUpIter = data.get("powerUps").iterator();
+        while (powerUpIter.hasNext()) {
+            JsonValue powerUpJson = powerUpIter.next();
+            PowerUpType type = new Json().fromJson(PowerUpType.class, powerUpJson.getString("type"));
+            Vector2 powerUpPos = new Vector2(powerUpJson.get("pos").getFloat("x"), powerUpJson.get("pos").getFloat("y"));
+            this.powerUps.add(new PowerUp(type, powerUpPos));
+        }
+
+        JsonIterator waitTimeIter = data.get("randomWaitTimes").iterator();
+        while (waitTimeIter.hasNext()) {
+            JsonValue randomWaitJson = waitTimeIter.next();
+            this.randomWaitTimes.add(randomWaitJson.asFloat());
+        }
     }
 
     /**
@@ -209,4 +259,33 @@ public class Lane {
         }
     }
 
+    /**
+     * Creates a JSON string needed to fully reconstruct the class.
+     * 
+     * @return JSON String contain all values needed to reconstruct the class.
+     */
+    public String toJson(){
+        String[] obstacleJson = new String[this.obstacles.size()];
+        String[] powerUpJson = new String[this.powerUps.size()];
+        String[] randomWaitJson = new String[this.randomWaitTimes.size()];
+        for (int i=0;i<this.obstacles.size();i++){
+            obstacleJson[i] = this.obstacles.get(i).toJson();
+        }
+        for (int i=0;i<this.powerUps.size();i++){
+            powerUpJson[i] = this.powerUps.get(i).toJson();
+        }
+        for (int i=0;i<this.randomWaitTimes.size();i++){
+            randomWaitJson[i] = randomWaitTimes.get(i).toString();
+        }
+
+        return String.format("{pos:{x:%f, y:%f}, width:%s, round:%s, obstacles:[%s], powerUps:[%s], randomWaitTimes:[%s]}", 
+            this.position.x,
+            this.position.y,
+            this.width,
+            this.round,
+            String.join(",", obstacleJson),
+            String.join(",", powerUpJson),
+            String.join(",", randomWaitJson)
+        );
+    }
 }
