@@ -51,17 +51,17 @@ public class Config {
     public static int GAME_DIFFICULTY = 1;
 
     /**
-     * The name of the save file
+     * The location of the save files
      */
-    public static String SAVE_FILE_NAME = getSaveFile();
+    public static String SAVE_FILE_LOCATION = getSaveLocation();
 
     /**
      * 
      * @return A string to the save file location.
      */
-    private static String getSaveFile(){
+    private static String getSaveLocation(){
         try {
-            return new File(DragonBoatRace.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toPath().resolve("../dragonBoatSave.json").normalize().toString();
+            return new File(DragonBoatRace.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toPath().resolve("..").normalize().toString();
         } catch (URISyntaxException exception) {
             return null;
         }

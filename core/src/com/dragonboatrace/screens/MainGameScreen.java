@@ -5,7 +5,6 @@ import java.io.File;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -19,6 +18,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.files.FileHandle;
 import com.dragonboatrace.DragonBoatRace;
+import com.dragonboatrace.entities.boats.Boat;
 import com.dragonboatrace.entities.boats.BoatType;
 import com.dragonboatrace.entities.Button;
 import com.dragonboatrace.entities.EntityType;
@@ -79,8 +79,21 @@ public class MainGameScreen implements Screen {
      */
     private final Button saveButton;
     /**
+     * The button used to save in slot 1
+     */
+    private final Button slot1Button;
+    /**
+     * The button used to save in slot 2
+     */
+    private final Button slot2Button;
+    /**
+     * The button used to save in slot 3
+     */
+    private final Button slot3Button;
+    /**
      * The button used to go to the main menu.
      */
+    private boolean saving = false;
     private final Button mainMenuButton;
     /**
      * The time left on the initial countdown.
@@ -109,6 +122,10 @@ public class MainGameScreen implements Screen {
         this.saveButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.5f), "save_button_active.png", "save_button_inactive.png");
         this.mainMenuButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "main_menu_button_active.png", "main_menu_button_inactive.png");
         this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "exit_button_active.png", "exit_button_inactive.png");
+
+        this.slot1Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.5f), "slot1_button_active.png", "slot1_button_inactive.png");
+        this.slot2Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "slot2_button_active.png", "slot2_button_inactive.png");
+        this.slot3Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "slot3_button_active.png", "slot3_button_inactive.png");
 
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
@@ -167,6 +184,10 @@ public class MainGameScreen implements Screen {
         this.mainMenuButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "main_menu_button_active.png", "main_menu_button_inactive.png");
         this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "exit_button_active.png", "exit_button_inactive.png");
 
+        this.slot1Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.5f), "slot1_button_active.png", "slot1_button_inactive.png");
+        this.slot2Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "slot2_button_active.png", "slot2_button_inactive.png");
+        this.slot3Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "slot3_button_active.png", "slot3_button_inactive.png");
+
         /* Font related items */
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("osaka-re.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -209,15 +230,6 @@ public class MainGameScreen implements Screen {
      * Runs when the window first starts. Runs the countdown starter.
      */
     public void show() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keyCode) {
-                if (keyCode == Input.Keys.ESCAPE && countDownRemaining < 0) {
-                    paused = !paused;
-                }
-                return true;
-            }
-        });
         timer.start();
     }
 
@@ -229,8 +241,18 @@ public class MainGameScreen implements Screen {
     public void render(float deltaTime) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if (this.saving) {
+                this.saving = false;
+            } else {
+                this.paused = !paused;
+            }
+        }
         if (!paused) {
+            System.out.println("GAME");
+            for (Boat b : this.race.getBoat()){
+                System.out.println(b.getPos());
+            }
             this.logger.log();
             this.background.update(deltaTime * this.race.getPlayer().getVelocity().y);
             this.background.render(game.getBatch());
@@ -240,6 +262,10 @@ public class MainGameScreen implements Screen {
             this.background.render(game.getBatch());
             this.race.render(game.getBatch(), game.getRenderer());
             displayCountDown();
+            System.out.println("COUNTDOWN");
+            for (Boat b : this.race.getBoat()){
+                System.out.println(b.getPos());
+            }
         } else {
             this.background.render(game.getBatch());
             this.race.render(game.getBatch(), game.getRenderer());
@@ -272,22 +298,46 @@ public class MainGameScreen implements Screen {
         layout.setText(font, "PAUSED");
         fontWhite.draw(game.getBatch(), "PAUSED", (Gdx.graphics.getWidth() - layout.width) / 2, Gdx.graphics.getHeight() * 0.9f);
 
-
-        this.saveButton.render(this.game.getBatch());
-        if (this.saveButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
-            if (Config.SAVE_FILE_NAME != null) {
-                FileHandle saveFile = new FileHandle(new File(Config.SAVE_FILE_NAME));
-                saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+        if (! this.saving) {
+            this.saveButton.render(this.game.getBatch());
+            if (this.saveButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+                this.saving = true;
+            }
+            this.mainMenuButton.render(this.game.getBatch());
+            if (this.mainMenuButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+                this.game.setScreen(new MainMenuScreen(this.game));
+            }
+            this.exitButton.render(this.game.getBatch());
+            if (this.exitButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+                Gdx.app.exit();
+            }
+        } else {
+            this.slot1Button.render(this.game.getBatch());
+            if (this.slot1Button.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+                if (Config.SAVE_FILE_LOCATION != null) {
+                    FileHandle saveFile = new FileHandle(new File(String.format("%s/dragonBoatSave-1.json", Config.SAVE_FILE_LOCATION)));
+                    saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                    this.saving = false;
+                }
+            }
+            this.slot2Button.render(this.game.getBatch());
+            if (this.slot2Button.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+                if (Config.SAVE_FILE_LOCATION != null) {
+                    FileHandle saveFile = new FileHandle(new File(String.format("%s/dragonBoatSave-2.json", Config.SAVE_FILE_LOCATION)));
+                    saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                    this.saving = false;
+                }
+            }
+            this.slot3Button.render(this.game.getBatch());
+            if (this.slot3Button.isHovering() && Gdx.input.isButtonJustPressed(0)) {
+                if (Config.SAVE_FILE_LOCATION != null) {
+                    FileHandle saveFile = new FileHandle(new File(String.format("%s/dragonBoatSave-3.json", Config.SAVE_FILE_LOCATION)));
+                    saveFile.writeString(new JsonReader().parse(this.race.toJson()).toString(), false);
+                    this.saving = false;
+                }
             }
         }
-        this.mainMenuButton.render(this.game.getBatch());
-        if (this.mainMenuButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
-            this.game.setScreen(new MainMenuScreen(this.game));
-        }
-        this.exitButton.render(this.game.getBatch());
-        if (this.exitButton.isHovering() && Gdx.input.isButtonJustPressed(0)) {
-            Gdx.app.exit();
-        }
+
         this.game.getBatch().end();
     }
 

@@ -298,6 +298,8 @@ public class Race {
         return this.player;
     }
 
+    public List<Boat> getBoat() {return this.boats;}
+
     public void dispose() {
         for (Boat boat : this.boats) {
             boat.dispose();

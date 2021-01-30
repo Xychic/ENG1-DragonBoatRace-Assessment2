@@ -15,12 +15,10 @@ import com.dragonboatrace.entities.Entity;
 import com.dragonboatrace.entities.EntityType;
 import com.dragonboatrace.entities.Obstacle;
 import com.dragonboatrace.entities.PowerUp;
-import com.dragonboatrace.entities.PowerUpType;
 import com.dragonboatrace.tools.Hitbox;
 import com.dragonboatrace.tools.Lane;
 import com.dragonboatrace.tools.Config;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 /**
@@ -228,6 +226,7 @@ public class Boat extends Entity {
         this.time = data.getFloat("time");
         this.totalTime = data.getFloat("totalTime");
         this.penaltyTime = data.getFloat("penaltyTime");
+        this.distanceTravelled = data.getFloat("distanceTravelled");
 
         laneBox = lane.getHitbox();
         generateFonts();
@@ -686,6 +685,8 @@ public class Boat extends Entity {
         return this.distanceTravelled;
     }
 
+    public Vector2 getPos() {return this.position;}
+
     /**
      * Dispose of the fonts used in the HUD and then perform {@link Entity}'s dispose.
      */
@@ -701,7 +702,7 @@ public class Boat extends Entity {
      * @return JSON String contain all values needed to reconstruct the class.
      */
     public String toJson() {
-        return String.format("{pos:{x:%f, y:%f}, vel:{x:%f, y:%f}, type:%s, lane:%s, name:%s, data:{shield:%f, boost:%f, health:%f, stamina:%f, time:%f, totalTime:%f, penaltyTime:%f}}", 
+        return String.format("{pos:{x:%f, y:%f}, vel:{x:%f, y:%f}, type:%s, lane:%s, name:%s, data:{shield:%f, boost:%f, health:%f, stamina:%f, time:%f, totalTime:%f, penaltyTime:%f, distanceTravelled:%f}}", 
             this.position.x,
             this.position.y,
             this.velocity.x,
@@ -715,7 +716,8 @@ public class Boat extends Entity {
             this.stamina,
             this.time,
             this.totalTime,
-            this.penaltyTime
+            this.penaltyTime,
+            this.distanceTravelled
         );
     }
 }
