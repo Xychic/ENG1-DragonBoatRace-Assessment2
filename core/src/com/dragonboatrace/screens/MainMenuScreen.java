@@ -184,7 +184,6 @@ public class MainMenuScreen implements Screen {
         int round = jsonData.get("race").getInt("round");
         this.game.setRound(round);
         game.setScreen(new MainGameScreen(this.game, jsonData));
-
     }
 
     @Override
