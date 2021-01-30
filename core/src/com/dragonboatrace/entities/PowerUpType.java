@@ -11,7 +11,7 @@ public enum PowerUpType {
     REPAIR("power_up_repair.png", 50, 0),
     SHIELD("power_up_shield.png", 55, 0),
     CLEAR("power_up_clear.png", 50, 0),
-    LATERAL("power_up_lateral.png", 50, 0);
+    STAMINA("power_up_stamina.png", 50, 0);
 
     /**
      * The texture of the power up.

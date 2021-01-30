@@ -21,6 +21,7 @@ import com.dragonboatrace.screens.RoundsScreen;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -80,9 +81,11 @@ public class Race {
         this.barrier = new Texture("line.png");
 
         boats = new ArrayList<Boat>();
+        List<BoatType> avaialableTypes = new ArrayList<BoatType>(Arrays.asList(BoatType.values()));
+        avaialableTypes.remove(boatChosen);
         for (int i = 1; i < Config.PLAYER_COUNT; i++) {
-            int rand = ThreadLocalRandom.current().nextInt(0, BoatType.values().length);
-            boats.add(new ComputerBoat(BoatType.values()[rand], new Lane(new Vector2(size * i, 0), size, round), "COMP" + i, i));
+            int rand = ThreadLocalRandom.current().nextInt(0, avaialableTypes.size());
+            boats.add(new ComputerBoat(avaialableTypes.get(rand), new Lane(new Vector2(size * i, 0), size, round), "COMP" + i, i));
         }
         this.timer = System.nanoTime();
     }

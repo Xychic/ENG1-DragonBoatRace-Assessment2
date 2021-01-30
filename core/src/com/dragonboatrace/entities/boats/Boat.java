@@ -450,7 +450,6 @@ public class Boat extends Entity {
             PowerUp powerUp = powerUpIterator.next();
             if (powerUp.getHitBox().collidesWith(this.hitbox)) {
                 powerUp.dispose();
-                // this.lane.removePowerUp(powerUp);
                 powerUpIterator.remove();
                 
                 switch (powerUp.getType()) {
@@ -473,7 +472,8 @@ public class Boat extends Entity {
                     case "SHIELD":
                         this.shield = 50;
                         break;
-                    case "LATERAL":
+                    case "STAMINA":
+                        this.stamina = this.maxStamina;
                         break;
                     default:
                         break;
