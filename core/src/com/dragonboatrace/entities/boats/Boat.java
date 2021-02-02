@@ -179,8 +179,21 @@ public class Boat extends Entity {
      * @param name The name of the boat.
      */
     public Boat(BoatType boat, Lane lane, String name) {
+        this(boat, lane, name, true);
+    }
+
+    /**
+     * Creates a Boat with the specified BoatType for pre-defined values,
+     * a Lane to give the boat its position and a name for easy identification.
+     *
+     * @param boat The type of boat to use as a template.
+     * @param lane The lane the boat is in.
+     * @param name The name of the boat.
+     * @param loadTextures If the enity should load its textures.
+     */
+    public Boat(BoatType boat, Lane lane, String name, boolean loadTextures) {
         /* Get boat position from the position of the lane. */
-        super(new Vector2(lane.getHitbox().getX() + (lane.getHitbox().getWidth() - EntityType.BOAT.getWidth()) / 2.0f, 100), new Vector2(), EntityType.BOAT, boat.getImageSrc());
+        super(new Vector2(lane.getHitbox().getX() + (lane.getHitbox().getWidth() - EntityType.BOAT.getWidth()) / 2.0f, 100), new Vector2(), EntityType.BOAT, boat.getImageSrc(), loadTextures);
         this.shield = 0;
         this.boost = 0;
         this.maxHealth = boat.getHealth();
@@ -211,7 +224,21 @@ public class Boat extends Entity {
      * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
      */
     public Boat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data) {
-        super(pos, vel, EntityType.BOAT, boat.getImageSrc());
+        this(pos, vel, boat, lane, name, data, true);
+    }
+
+    /**
+     * Creates a Boat with the specified BoatType for pre-defined values,
+     * a Lane to give the boat its position and a name for easy identification.
+     *
+     * @param boat The type of boat to use as a template.
+     * @param lane The lane the boat is in.
+     * @param name The name of the boat.
+     * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
+     * @param loadTextures If the enity should load its textures.
+     */
+    public Boat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data, Boolean loadTextures) {
+        super(pos, vel, EntityType.BOAT, boat.getImageSrc(), loadTextures);
         this.shield = data.getInt("shield");
         this.boost = data.getInt("boost");
         this.maxHealth = boat.getHealth();

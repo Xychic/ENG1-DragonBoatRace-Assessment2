@@ -2,7 +2,6 @@ package com.dragonboatrace.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Json;
 
 import java.util.concurrent.ThreadLocalRandom;
 

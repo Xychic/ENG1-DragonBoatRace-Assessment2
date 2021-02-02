@@ -43,19 +43,33 @@ public abstract class Entity {
      * @param texture  The texture of the entity.
      */
     public Entity(Vector2 position, Vector2 velocity, EntityType type, String texture) {
+        this(position, velocity, type, texture, true);
+    }
+    
+    /**
+     * Creates a new Entity at a position with a starting velocity, a entity type and a texture.
+     *
+     * @param position The initial position of the entity.
+     * @param velocity The initial velocity of the entity.
+     * @param type     The type of entity.
+     * @param texture  The texture of the entity.
+     * @param loadTextures If the enity should load its textures.
+     */
+    public Entity(Vector2 position, Vector2 velocity, EntityType type, String texture, boolean loadTextures) {
         this.position = position;
         this.velocity = velocity;
         this.type = type;
-
-        /* Resize the texture to the bounds of the entity, defined in EntityType */
-        Pixmap full = new Pixmap(Gdx.files.local(texture));
-        Pixmap resize = new Pixmap(type.getWidth(), type.getHeight(), full.getFormat());
-        /* Redraw texture */
-        resize.drawPixmap(full, 0, 0, full.getWidth(), full.getHeight(), 0, 0, resize.getWidth(), resize.getHeight());
-        this.texture = new Texture(resize);
-
-        full.dispose();
-        resize.dispose();
+        if (loadTextures) {
+            /* Resize the texture to the bounds of the entity, defined in EntityType */
+            Pixmap full = new Pixmap(Gdx.files.local(texture));
+            Pixmap resize = new Pixmap(type.getWidth(), type.getHeight(), full.getFormat());
+            /* Redraw texture */
+            resize.drawPixmap(full, 0, 0, full.getWidth(), full.getHeight(), 0, 0, resize.getWidth(), resize.getHeight());
+            this.texture = new Texture(resize);
+            
+            full.dispose();
+            resize.dispose();
+        }
 
         /* Make a new hit box at the entities position with its width and height */
         this.hitbox = new Hitbox((int) position.x, (int) position.y, type.getWidth(), type.getHeight());
