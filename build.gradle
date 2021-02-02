@@ -55,32 +55,18 @@ project(":desktop") {
     }
 }
 
-project(":tests") {
+project(":core") {
+    apply plugin: "java-library"
     apply plugin: "java"
 
-    sourceSets.test.java.srcDirs = ["src/"]
-    		
+    sourceSets.test.java.srcDirs = ["src/test/"]
+
     dependencies {
-	
-		/**
-		 * If you do have some classes to test in os specific code you may want to uncomment
-		 * some of these lines.
-		 * 
-		 * BUT: I recommend to create seperate test sub projects for each platform. Trust me :)
-		 * 
-		 */
-	
-//        compile project(":android")
-//        compile project(":html")
-    //    compile project(":desktop")
-        
-        
-//        if(System.getProperty("os.name").toLowerCase().indexOf("mac") >= 0) {
-//        	compile project(":ios")
-//        }
-        
-        // compile project(":core")
-        
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+
         compile "junit:junit:4.+"
         compile "org.mockito:mockito-all:1.9.+"
         
@@ -93,17 +79,5 @@ project(":tests") {
         testCompile "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-    }
-}
-
-project(":core") {
-    apply plugin: "java-library"
-
-
-    dependencies {
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     }
 }

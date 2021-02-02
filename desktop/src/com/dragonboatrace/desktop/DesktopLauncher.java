@@ -2,8 +2,8 @@ package com.dragonboatrace.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.dragonboatrace.DragonBoatRace;
-import com.dragonboatrace.tools.Config;
+import main.com.dragonboatrace.game.DragonBoatRace;
+import main.com.dragonboatrace.game.tools.Config;
 
 import java.awt.*;
 
