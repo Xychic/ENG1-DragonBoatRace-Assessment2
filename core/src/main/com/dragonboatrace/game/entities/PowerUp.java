@@ -31,22 +31,31 @@ public class PowerUp extends Entity {
      * @param type   The type of power up.
      * @param startX The starting x value the power up can be created in.
      * @param width  How far from startX the power up can be created.
+     * @param loadTextures If the enity should load its textures.
      */
-    public PowerUp(PowerUpType type, float startX, int width) {
+    public PowerUp(PowerUpType type, float startX, int width, boolean loadTextures) {
         /* Entity creation */
         /* First vector is long as to start it at a random x position within the bounds of the screen */
         /* Form of Entity(Vector2 pos, Vector2 vel, EntityType type, String texture) */
-        super(new Vector2(((int) startX + width) / 2.0f + ThreadLocalRandom.current().nextInt(-((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2, ((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2), Gdx.graphics.getHeight()), new Vector2(), EntityType.POWERUP, type.getTexture());
+        super(new Vector2(((int) startX + width) / 2.0f + ThreadLocalRandom.current().nextInt(-((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2, ((int) startX + width) / 2 + EntityType.POWERUP.getWidth() / 2), Gdx.graphics.getHeight()), new Vector2(), EntityType.POWERUP, type.getTexture(), loadTextures);
         this.speed = type.getSpeed();
         this.damage = type.getDamage();
         this.type = type;
     }
 
-    public PowerUp(PowerUpType type, Vector2 pos) {
-        super(pos, new Vector2(), EntityType.POWERUP, type.getTexture());
+    public PowerUp(PowerUpType type, float startX, int width) {
+        this(type, startX, width, true);
+    }
+
+    public PowerUp(PowerUpType type, Vector2 pos, boolean loadTextures) {
+        super(pos, new Vector2(), EntityType.POWERUP, type.getTexture(), loadTextures);
         this.speed = type.getSpeed();
         this.damage = type.getDamage();
         this.type = type;
+    }
+    
+    public PowerUp(PowerUpType type, Vector2 pos) {
+        this(type, pos, true);
     }
 
     /**
