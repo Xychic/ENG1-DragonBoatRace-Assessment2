@@ -81,8 +81,8 @@ public abstract class Entity {
     public void dispose() {
         try {
             this.texture.dispose();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (java.lang.NullPointerException e) {
+            ;
         }
     }
 

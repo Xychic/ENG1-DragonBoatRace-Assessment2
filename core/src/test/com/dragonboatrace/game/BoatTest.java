@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 public class BoatTest {
 
     @Test
-	public void saveConsistentcy() {
+	public void boatSaveConsistentcy() {
         Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
         String before = b.toJson();
         
@@ -50,6 +50,17 @@ public class BoatTest {
     }
 
     @Test
+    public void obstacleReducesHealth() {
+        Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
+        float x = b.getHitBox().getX();
+        float y = b.getHitBox().getY();
+        b.getLane().getObstacles().add(new Obstacle(ObstacleType.BRANCH, new Vector2(x, y), false));
+        float startHealth = b.getHealth();
+        b.checkObstacleCollisions();
+        assertTrue(startHealth != b.getHealth());
+    }
+
+    @Test
     public void powerUpCollision() {
         Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
         float x = b.getHitBox().getX();
@@ -57,5 +68,50 @@ public class BoatTest {
         b.getLane().getPowerUps().add(new PowerUp(PowerUpType.REPAIR, new Vector2(x, y), false));
         assertTrue(b.checkPowerUpCollisions());
     }
-}
 
+    @Test
+    public void powerUpShieldEffect() {
+        Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
+        float x = b.getHitBox().getX();
+        float y = b.getHitBox().getY();
+        b.getLane().getPowerUps().add(new PowerUp(PowerUpType.SHIELD, new Vector2(x, y), false));
+        b.checkPowerUpCollisions();
+        assertTrue(b.getShield() > 0);
+    }
+
+    @Test
+    public void powerUpBombEffect() {
+        Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
+        float x = b.getHitBox().getX();
+        float y = b.getHitBox().getY();
+        b.getLane().getObstacles().add(new Obstacle(ObstacleType.BRANCH, new Vector2(x+100, y), false));
+        b.getLane().getPowerUps().add(new PowerUp(PowerUpType.CLEAR, new Vector2(x, y), false));
+        b.checkPowerUpCollisions();
+        assertTrue(b.getLane().getObstacles().size() == 0);
+    }
+
+    @Test
+    public void powerUpStaminaEffect() {
+        Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
+        float x = b.getHitBox().getX();
+        float y = b.getHitBox().getY();
+        b.addStamina(-10);
+        float before = b.getStamina();
+        b.getLane().getPowerUps().add(new PowerUp(PowerUpType.STAMINA, new Vector2(x, y), false));
+        b.checkPowerUpCollisions();
+        assertTrue(b.getStamina() > before);
+    }
+
+    @Test
+    public void powerUpHealthEffect() {
+        Boat b = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1, 2, 3, false), "testBoat", false);
+        float x = b.getHitBox().getX();
+        float y = b.getHitBox().getY();
+        b.getLane().getObstacles().add(new Obstacle(ObstacleType.BRANCH, new Vector2(x, y), false));
+        b.getLane().getPowerUps().add(new PowerUp(PowerUpType.REPAIR, new Vector2(x, y), false));
+        b.checkObstacleCollisions();
+        float before = b.getHealth();
+        b.checkPowerUpCollisions();
+        assertTrue(b.getHealth() > before);
+    }
+}
