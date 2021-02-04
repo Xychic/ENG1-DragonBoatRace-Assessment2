@@ -68,7 +68,8 @@ public class PlayerBoat extends Boat {
                 this.velocity.set(this.velocity.x, this.speed);
             }
             if (this.position.y < Gdx.graphics.getHeight() * 0.75f) {
-                if (checkCollisions()) {
+                checkPowerUpCollisions();
+                if (checkObstacleCollisions()) {
                     recentCollision = true;
                 }
             }

@@ -79,7 +79,11 @@ public abstract class Entity {
      * Dispose of the texture used when finished.
      */
     public void dispose() {
-        this.texture.dispose();
+        try {
+            this.texture.dispose();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

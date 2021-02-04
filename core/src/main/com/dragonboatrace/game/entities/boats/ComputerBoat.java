@@ -118,7 +118,8 @@ public class ComputerBoat extends Boat {
                     this.stamina = (this.stamina < this.maxStamina) ? this.regenerateStamina() + this.stamina : this.maxStamina;
                 }
             }
-            if (this.checkCollisions()) {
+            checkPowerUpCollisions();
+            if (this.checkObstacleCollisions()) {
                 recentCollision = true;
             }
         } else {

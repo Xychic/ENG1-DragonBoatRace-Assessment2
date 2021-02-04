@@ -445,8 +445,8 @@ public class Boat extends Entity {
      *
      * @return True if a collision occurred, False if no collision.
      */
-    protected boolean checkCollisions() {
-        boolean RecentCollision = false;
+    public boolean checkObstacleCollisions() {
+        boolean recentCollision = false;
 
         /* Check for collisions with obstacles */
         Iterator<Obstacle> obstacleIterator = this.lane.getObstacles().iterator();
@@ -471,15 +471,27 @@ public class Boat extends Entity {
                         this.shield = 0;
                     }
                 }
-                RecentCollision = true;
+                recentCollision = true;
             }
         }
+
+        return recentCollision;
+    }
+
+    /**
+     * Check for collisions by getting the contents of the lane and checking their positions to the boat position.
+     *
+     * @return True if a collision occurred, False if no collision.
+     */
+    public boolean checkPowerUpCollisions() {
+        boolean recentCollision = false;
 
         /* Check for collisions with power ups */
         Iterator<PowerUp> powerUpIterator = this.lane.getPowerUps().iterator();
         while (powerUpIterator.hasNext()) {
             PowerUp powerUp = powerUpIterator.next();
             if (powerUp.getHitBox().collidesWith(this.hitbox)) {
+                recentCollision = true;
                 powerUp.dispose();
                 powerUpIterator.remove();
                 
@@ -511,8 +523,7 @@ public class Boat extends Entity {
                 }
             }
         }
-
-        return RecentCollision;
+        return recentCollision;
     }
 
     /**
