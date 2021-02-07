@@ -74,11 +74,11 @@ public class RequirementsTesting {
 
     @Test
     public void UR_PADDLERS_STAMINA_DECREASETest() {
-        // player and cpu boat of each type
+        //boats of every type
         Boat[] boats = new Boat[BoatType.values().length];
 
         for (int i = 0; i < BoatType.values().length; i++) {
-            boats[i] = new Boat(BoatType.values()[i], new Lane(new Vector2(), 10, 1), "TestBoat" + String.valueOf(i));
+            boats[i] = new Boat(BoatType.values()[i] , new Lane(new Vector2(123, 456), 1, 2, 3, false) , "name", false);
         }
 
         for (int i = 0; i < BoatType.values().length; i++) {
@@ -104,5 +104,8 @@ public class RequirementsTesting {
         }
         return true;
     }
+
+    
+
 
 }

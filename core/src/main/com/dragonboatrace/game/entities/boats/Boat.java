@@ -615,6 +615,10 @@ public class Boat extends Entity {
         return this.stamina;
     }
 
+    public void setStamina(float value){
+        this.stamina = value;
+    }
+
     /**
      * Get the current shield of the boat.
      *
@@ -668,6 +672,7 @@ public class Boat extends Entity {
     public BoatType getBoatType() {
         return this.boatType;
     }
+
 
     /**
      * Get the boat time
