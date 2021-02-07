@@ -2,6 +2,8 @@ package test.com.dragonboatrace.game;
 
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
@@ -53,9 +55,9 @@ public class RequirementsTesting {
     public void UR_DIFFICULTY_LEVELTest() {
         // first check how many obstacles will spawn every round, this will represent
         // the difficulty of each round
-        int countRoundOne = Lane.createObstacleCount(1, 1, 1);
-        int countRoundTwo = Lane.createObstacleCount(2, 1, 1);
-        int countRoundThree = Lane.createObstacleCount(3, 1, 1);
+        int countRoundOne = (new Lane(new Vector2(123, 456), 1, 2, 3, false)).createObstacleCount(1, 1, 1);
+        int countRoundTwo = (new Lane(new Vector2(123, 456), 1, 2, 3, false)).createObstacleCount(2, 1, 1);
+        int countRoundThree = (new Lane(new Vector2(123, 456), 1, 2, 3, false)).createObstacleCount(3, 1, 1);
 
         // then check if as the rounds increase the number of obstacles spawning
         // increases
@@ -75,28 +77,28 @@ public class RequirementsTesting {
         // player and cpu boat of each type
         Boat[] boats = new Boat[BoatType.values().length];
 
-        for (i = 0; i < BoatType.values().length; i++) {
-            boats[i] = Boat(BoatType.values()[i], new Lane(new Vector2(), 10, 1), "TestBoat" + i.toString());
+        for (int i = 0; i < BoatType.values().length; i++) {
+            boats[i] = new Boat(BoatType.values()[i], new Lane(new Vector2(), 10, 1), "TestBoat" + String.valueOf(i));
         }
 
-        for (i = 0; i < BoatType.values().length; i++) {
+        for (int i = 0; i < BoatType.values().length; i++) {
             boats[i].addVelocity(0, 100);
         }
 
         // then have them simulate moving forward a bunch
         // this will be 50 seconds at 1fps
-        for (i = 0; i < 3000; i++) {
+        for (int i = 0; i < 3000; i++) {
             for (Boat boat : boats) {
                 boat.update(1000);
             }
         }
         // check their stamina and if its less than their original then it works
-        assertTrue(checkBoatStaminaDecrease(playerBoats) & checkBoatStaminaDecrease(computerBoats));
+        assertTrue(checkBoatStaminaDecrease(boats));
     }
 
     public Boolean checkBoatStaminaDecrease(Boat[] boats) {
-        for (PlayerBoat b : boats) {
-            if (b.boatType.stamina == b.getStamina) {
+        for (Boat b : boats) {
+            if (b.getBoatType().getStamina() == b.getStamina()) {
                 return false;
             }
         }

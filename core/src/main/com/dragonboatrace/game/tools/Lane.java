@@ -266,11 +266,15 @@ public class Lane {
      * @param round The current round increases the number of obstacles.
      */
     private void populateList(int round) {
-        int obstacleCount = (15 * (1 + round + Config.GAME_DIFFICULTY)) / Config.PLAYER_COUNT;
+        int obstacleCount = createObstacleCount(round, Config.GAME_DIFFICULTY, Config.PLAYER_COUNT);
         // for (int i = 0; i < Math.min((5 - Config.PLAYER_COUNT + round) + (5 * Config.GAME_DIFFICULTY), 5); i++) {
         for (int i=0; i<obstacleCount; i++){
             replaceObstacle();
         }
+    }
+
+    public int createObstacleCount(int round, int difficulty, int playerCount){
+        return (15 * (1 + round + difficulty)) / playerCount;
     }
 
     public void dispose() {
