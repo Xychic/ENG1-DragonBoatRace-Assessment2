@@ -2,6 +2,7 @@ package test.com.dragonboatrace.game;
 
 import static org.junit.Assert.*;
 
+import java.beans.Transient;
 import java.util.HashSet;
 
 import com.badlogic.gdx.math.Vector2;
@@ -74,38 +75,20 @@ public class RequirementsTesting {
 
     @Test
     public void UR_PADDLERS_STAMINA_DECREASETest() {
-        //boats of every type
-        Boat[] boats = new Boat[BoatType.values().length];
+        Boat myBoat = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1 ,2 , 3 ,false) , "name", false);
+        myBoat.addVelocity(0,100);
 
-        for (int i = 0; i < BoatType.values().length; i++) {
-            boats[i] = new Boat(BoatType.values()[i] , new Lane(new Vector2(123, 456), 1, 2, 3, false) , "name", false);
-        }
-
-        for (int i = 0; i < BoatType.values().length; i++) {
-            boats[i].addVelocity(0, 100);
-        }
-
-        // then have them simulate moving forward a bunch
-        // this will be 50 seconds at 1fps
         for (int i = 0; i < 3000; i++) {
-            for (Boat boat : boats) {
-                boat.update(1000);
-            }
+            myBoat.update(1000);
         }
-        // check their stamina and if its less than their original then it works
-        assertTrue(checkBoatStaminaDecrease(boats));
-    }
 
-    public Boolean checkBoatStaminaDecrease(Boat[] boats) {
-        for (Boat b : boats) {
-            if (b.getBoatType().getStamina() == b.getStamina()) {
-                return false;
-            }
+        Boolean staminaDecrease = true;
+
+        if (myBoat.getBoatType().getStamina() == myBoat.getStamina()) {
+            staminaDecrease = false;
         }
-        return true;
-    }
 
+        assertTrue(staminaDecrease);
+    }
     
-
-
 }
