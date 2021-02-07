@@ -2,16 +2,19 @@ package test.com.dragonboatrace.game;
 
 import static org.junit.Assert.*;
 
-import java.util.HashSet;
-import java.util.Vector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+
+import main.com.dragonboatrace.game.entities.boats.Boat;
+import main.com.dragonboatrace.game.entities.boats.BoatType;
+import main.com.dragonboatrace.game.tools.Lane;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
-
-@RunWith (GdxTestRunner.class)
+//@RunWith (GdxTestRunner.class)
 public class RequirementsTesting {
 
     /**
@@ -70,21 +73,20 @@ public class RequirementsTesting {
     @Test
     public void UR_PADDLERS_STAMINA_DECREASETest() {
         // player and cpu boat of each type
-        PlayerBoat[] playerBoats = generatePlayerBoatList();
-        ComputerBoat[] computerBoats = generateCPUBoatList();
+        Boat[] boats = new Boat[BoatType.values().length];
 
         for (i = 0; i < BoatType.values().length; i++) {
-            PlayerBoat[i].addVelocity(0, 100);
-            ComputerBoat[i].addVelocity(0, 100);
+            boats[i] = Boat(BoatType.values()[i], new Lane(new Vector2(), 10, 1), "TestBoat" + i.toString());
+        }
+
+        for (i = 0; i < BoatType.values().length; i++) {
+            boats[i].addVelocity(0, 100);
         }
 
         // then have them simulate moving forward a bunch
         // this will be 50 seconds at 1fps
         for (i = 0; i < 3000; i++) {
-            for (Boat boat : playerBoats) {
-                boat.update(1000);
-            }
-            for (Boat boat : computerBoats) {
+            for (Boat boat : boats) {
                 boat.update(1000);
             }
         }
@@ -92,43 +94,13 @@ public class RequirementsTesting {
         assertTrue(checkBoatStaminaDecrease(playerBoats) & checkBoatStaminaDecrease(computerBoats));
     }
 
-    public PlayerBoat[] generatePlayerBoatList() {
-
-        PlayerBoat[] playerBoats = new PlayerBoat[BoatType.values().length];
-
-        for (i = 0; i < BoatType.values().length; i++) {
-            PlayerBoat[i] = PlayerBoat(BoatType.values()[i], new Lane(new Vector2(), 10, 1), "TestBoat");
-        }
-
-        return playerBoats;
-
-    }
-
-    public ComputerBoat[] generateCPUBoatList() {
-        ComputerBoat[] computerBoats = new ComputerBoat[BoatType.values().length];
-
-        for (i = 0; i < BoatType.values().length; i++) {
-            ComputerBoat[i] = PlayerBoat(BoatType.values()[i], new Lane(new Vector2(), 10, 1), "TestBoat");
-        }
-
-        return computerBoats;
-    }
-
     public Boolean checkBoatStaminaDecrease(Boat[] boats) {
-        for (Boat b : boats) {
+        for (PlayerBoat b : boats) {
             if (b.boatType.stamina == b.getStamina) {
                 return false;
             }
         }
         return true;
-    }
-
-    @Test
-    public void UR_PLAYER_PENALTYTest() {
-        PlayerBoat[] playerBoats = generatePlayerBoatList();
-        ComputerBoat[] computerBoats = generateCPUBoatList();
-
-        
     }
 
 }
