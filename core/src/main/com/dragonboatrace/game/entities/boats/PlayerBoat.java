@@ -39,7 +39,15 @@ public class PlayerBoat extends Boat {
         super(pos, vel, boat, lane, name, data);
     }
 
-    /**
+    public PlayerBoat(BoatType boat, Lane lane, String name, boolean loadTextures) {
+        super(boat, lane, name, loadTextures);
+	}
+
+	public PlayerBoat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data, boolean loadTextures) {
+        super(pos, vel, boat, lane, name, data, loadTextures);
+	}
+
+	/**
      * Update the boats position in respects to the time passed since the last frame.
      *
      * @param deltaTime The time passed since the last frame.

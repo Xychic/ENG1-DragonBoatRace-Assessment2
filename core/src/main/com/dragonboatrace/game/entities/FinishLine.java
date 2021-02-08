@@ -14,7 +14,7 @@ public class FinishLine extends Entity {
     /**
      * The scale at which to render at.
      */
-    private final float widthScale;
+    private float widthScale;
 
     /**
      * Creates a new Finish Line at a position and with a width which it will span.
@@ -25,6 +25,13 @@ public class FinishLine extends Entity {
     public FinishLine(Vector2 pos, int width) {
         super(new Vector2(pos.x, pos.y), new Vector2(), EntityType.FINISH, "finish.png");
         this.widthScale = (float) width / this.texture.getWidth();
+    }
+
+    public FinishLine(Vector2 pos, int width, boolean loadTextures) {
+        super(new Vector2(pos.x, pos.y), new Vector2(), EntityType.FINISH, "finish.png", loadTextures);
+        if (loadTextures) {
+            this.widthScale = (float) width / this.texture.getWidth();
+        }
     }
 
     /**

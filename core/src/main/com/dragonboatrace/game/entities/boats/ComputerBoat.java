@@ -35,12 +35,12 @@ public class ComputerBoat extends Boat {
     /**
      * The texture for the up indicator when the Computer is off the screen but above.
      */
-    private final Texture up;
+    private Texture up;
 
     /**
      * The texture for the indicator when the Computer is off the screen but below.
      */
-    private final Texture down;
+    private Texture down;
 
     /**
      * The random amount of stamina to have before using stamina again.
@@ -84,7 +84,35 @@ public class ComputerBoat extends Boat {
         this.waiting = false;
     }
 
-    /**
+    public ComputerBoat(BoatType boat, Lane lane, String name, int pickSpeedValue, boolean loadTextures) {
+        super(boat, lane, name, loadTextures);
+        this.speed = this.pickSpeed(pickSpeedValue);
+        this.xOffset = this.getHitBox().getWidth() / pickSpeedValue;
+        int yOffset = this.getHitBox().getHeight() / pickSpeedValue;
+        this.moveArea = new Hitbox(this.position.x - xOffset, this.position.y, this.getHitBox().getWidth() + 2 * xOffset, this.getHitBox().getHeight() + 2 * yOffset, loadTextures);
+        if (loadTextures) {
+            this.up = new Texture("up_arrow.png");
+            this.down = new Texture("down_arrow.png");
+        }
+        this.randomWait = 0;
+        this.waiting = false;
+	}
+
+	public ComputerBoat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data, int pickSpeedValue, boolean loadTextures) {
+        super(pos, vel, boat, lane, name, data, loadTextures);
+        this.speed = this.pickSpeed(pickSpeedValue);
+        this.xOffset = this.getHitBox().getWidth() / pickSpeedValue;
+        int yOffset = this.getHitBox().getHeight() / pickSpeedValue;
+        this.moveArea = new Hitbox(this.position.x - xOffset, this.position.y, this.getHitBox().getWidth() + 2 * xOffset, this.getHitBox().getHeight() + 2 * yOffset, loadTextures);
+        if (loadTextures) {
+            this.up = new Texture("up_arrow.png");
+            this.down = new Texture("down_arrow.png");
+        }
+        this.randomWait = 0;
+        this.waiting = false;
+	}
+
+	/**
      * Update the position of the boat in respect to the time passed since the last frame.
      *
      * @param deltaTime The time passed since the last frame.

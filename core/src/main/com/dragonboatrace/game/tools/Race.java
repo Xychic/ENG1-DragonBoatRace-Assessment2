@@ -53,7 +53,7 @@ public class Race {
     /**
      * The separator between each lane.
      */
-    private final Texture barrier;
+    private Texture barrier;
 
     /**
      * The timer for the race.
@@ -70,41 +70,70 @@ public class Race {
      * @param round The current round of the race.
      */
     public Race(int raceLength, BoatType boatChosen, int round) {
+        this(raceLength, boatChosen, round, true);
+    }
+
+    /**
+     * Creates a new race of a specified length.
+     *
+     * @param raceLength The length of the race.
+     * @param boatChosen The {@link BoatType} that the player chose.
+     * @param round The current round of the race.
+     * @param loadTextures If textures should be loaded.
+     */
+    public Race(int raceLength, BoatType boatChosen, int round, boolean loadTextures) {
         this.length = raceLength;
         this.round = round;
-        this.finishLine = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth());
-        int size = Gdx.graphics.getWidth() / Config.PLAYER_COUNT;
+        this.finishLine = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth(), loadTextures);
+        int size, height;
+        if (loadTextures) {
+            size = Gdx.graphics.getWidth() / Config.PLAYER_COUNT;
+            height = Gdx.graphics.getHeight() + 200;
+        } else {
+            size = 1920 / Config.PLAYER_COUNT;
+            height = 1280;
+        }
         this.timer = 0;
 
-        this.player = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), size, round), "Player");
+        this.player = new PlayerBoat(boatChosen, new Lane(new Vector2(0, 0), size, height, round, loadTextures), "Player", loadTextures);
 
-        this.barrier = new Texture("line.png");
+        if (loadTextures) {   
+            this.barrier = new Texture("line.png");
+        }
 
         boats = new ArrayList<Boat>();
         List<BoatType> avaialableTypes = new ArrayList<BoatType>(Arrays.asList(BoatType.values()));
         avaialableTypes.remove(boatChosen);
         for (int i = 1; i < Config.PLAYER_COUNT; i++) {
             int rand = ThreadLocalRandom.current().nextInt(0, avaialableTypes.size());
-            boats.add(new ComputerBoat(avaialableTypes.get(rand), new Lane(new Vector2(size * i, 0), size, round), "COMP" + i, i));
+            boats.add(new ComputerBoat(avaialableTypes.get(rand), new Lane(new Vector2(size * i, 0), size, height, round, loadTextures), "COMP" + i, i, loadTextures));
         }
         this.timer = System.nanoTime();
     }
 
     public Race(JsonValue data) {
+        this(data, true);
+    }
+
+    public Race(JsonValue data, boolean loadTextures) {
         this.length = data.getInt("length");
         this.round = data.getInt("round");
-        this.finishLine = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth());
+
+        this.finishLine = new FinishLine(new Vector2(0, Gdx.graphics.getHeight()), Gdx.graphics.getWidth(), loadTextures);
+
         this.timer = 0;
 
         JsonValue playerJson = data.get("player");
         BoatType boatType = new Json().fromJson(BoatType.class, playerJson.getString("type"));
-        Lane lane = new Lane(playerJson.get("lane"));
+        Lane lane = new Lane(playerJson.get("lane"), loadTextures);
         String name = playerJson.getString("name");
         Vector2 pos = new Vector2(playerJson.get("pos").getFloat("x"), playerJson.get("pos").getFloat("y"));
         Vector2 vel = new Vector2(playerJson.get("vel").getFloat("x"), playerJson.get("vel").getFloat("y"));
-        this.player = new PlayerBoat(pos, vel, boatType, lane, name, playerJson.get("data"));
+        this.player = new PlayerBoat(pos, vel, boatType, lane, name, playerJson.get("data"), loadTextures);
 
-        this.barrier = new Texture("line.png");
+        if (loadTextures) {   
+            this.barrier = new Texture("line.png");
+        }
 
         this.boats = new ArrayList<Boat>();
         JsonIterator boatIter = data.get("boats").iterator();
@@ -112,17 +141,17 @@ public class Race {
             int boatNum = 1;
             JsonValue boatJson = boatIter.next();
             BoatType CPUBoatType = new Json().fromJson(BoatType.class, boatJson.getString("type"));
-            Lane CPULane = new Lane(boatJson.get("lane"));
+            Lane CPULane = new Lane(boatJson.get("lane"), loadTextures);
             String CPUName = boatJson.getString("name");
             Vector2 boatPos = new Vector2(boatJson.get("pos").getFloat("x"), boatJson.get("pos").getFloat("y"));
             Vector2 boatVel = new Vector2(boatJson.get("vel").getFloat("x"), boatJson.get("vel").getFloat("y"));
-            this.boats.add(new ComputerBoat(boatPos, boatVel, CPUBoatType, CPULane, CPUName, boatJson.get("data"), boatNum++));
+            this.boats.add(new ComputerBoat(boatPos, boatVel, CPUBoatType, CPULane, CPUName, boatJson.get("data"), boatNum++, loadTextures));
         }
 
         this.timer = System.nanoTime();
-    }
+	}
 
-    /**
+	/**
      * Update the race in respects to the amount of time passed since the last frame.
      *
      * @param deltaTime The time since the last frame.

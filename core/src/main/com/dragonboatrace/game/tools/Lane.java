@@ -84,7 +84,13 @@ public class Lane {
         this.position = new Vector2(data.get("pos").getFloat("x"), data.get("pos").getFloat("y"));
         this.width = data.getInt("width");
         this.round = data.getInt("round");
-        this.area = new Hitbox(this.position.x, this.position.y, this.width, Gdx.graphics.getHeight() + 200, showRenderer);
+        int height;
+        if (showRenderer) {
+            height = Gdx.graphics.getHeight() + 200;
+        } else {
+            height = 1280;
+        }
+        this.area = new Hitbox(this.position.x, this.position.y, this.width, height, showRenderer);
 
 
         this.obstacles = new ArrayList<Obstacle>();
