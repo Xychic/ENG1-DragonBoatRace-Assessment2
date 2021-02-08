@@ -114,7 +114,7 @@ public class MainGameScreen implements Screen {
 
         this.logger = new FPSLogger();
 
-        this.race = new Race(10000 + (1000 * Config.GAME_DIFFICULTY), boatChosen, this.game.getRound());
+        this.race = new Race(20000 + (2000 * Config.GAME_DIFFICULTY), boatChosen, this.game.getRound());
         this.background = new ScrollingBackground();
         this.background.resize(Gdx.graphics.getWidth());
 
