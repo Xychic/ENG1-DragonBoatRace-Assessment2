@@ -72,23 +72,4 @@ public class RequirementsTesting {
         // round
         assertTrue(conditionOne & conditionTwo);
     }
-
-    @Test
-    public void UR_PADDLERS_STAMINA_DECREASETest() {
-        Boat myBoat = new Boat(BoatType.AGILE, new Lane(new Vector2(123, 456), 1 ,2 , 3 ,false) , "name", false);
-        myBoat.addVelocity(0,100);
-
-        for (int i = 0; i < 3000; i++) {
-            myBoat.update(1000);
-        }
-
-        Boolean staminaDecrease = true;
-
-        if (myBoat.getBoatType().getStamina() == myBoat.getStamina()) {
-            staminaDecrease = false;
-        }
-
-        assertTrue(staminaDecrease);
-    }
-    
 }
