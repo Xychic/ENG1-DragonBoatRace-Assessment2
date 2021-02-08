@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith (GdxTestRunner.class)
-public class BoatTest {
+public class BoatTests {
 
     @Test
 	public void SAVE_RELOAD() {
