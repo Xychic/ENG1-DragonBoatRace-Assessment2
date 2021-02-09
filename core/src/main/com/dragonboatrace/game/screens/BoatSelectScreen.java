@@ -111,6 +111,7 @@ public class BoatSelectScreen implements Screen {
 
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Renders the boat selection screen.
      *

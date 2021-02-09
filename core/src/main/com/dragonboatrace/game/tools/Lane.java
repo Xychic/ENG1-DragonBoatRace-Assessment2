@@ -45,6 +45,7 @@ public class Lane {
     private final int width;
     private final int round;
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
      * @param pos The position of the lane in the screen.
@@ -68,6 +69,7 @@ public class Lane {
         }
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
      * @param pos The position of the lane in the screen.
@@ -78,6 +80,7 @@ public class Lane {
         this(pos, width, Gdx.graphics.getHeight() + 200, round, true);
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
      * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
@@ -123,6 +126,7 @@ public class Lane {
         }
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new lane at a position and with a width and uses the round number to change the number of obstacles.
      * @param data The JsonValue that contains any other data the class requires to fully reconstruct it.
@@ -132,6 +136,7 @@ public class Lane {
     }
 
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Update the obstacles in the lane, remove any that are no longer on screen and replace them at a random time.
      *
@@ -293,6 +298,7 @@ public class Lane {
         }
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a JSON string needed to fully reconstruct the class.
      * 

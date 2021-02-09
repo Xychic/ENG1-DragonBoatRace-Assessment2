@@ -170,6 +170,7 @@ public class Boat extends Entity {
      */
     protected BitmapFont nameFont;
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Creates a Boat with the specified BoatType for pre-defined values,
      * a Lane to give the boat its position and a name for easy identification.
@@ -182,6 +183,7 @@ public class Boat extends Entity {
         this(boat, lane, name, true);
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a Boat with the specified BoatType for pre-defined values,
      * a Lane to give the boat its position and a name for easy identification.
@@ -216,6 +218,7 @@ public class Boat extends Entity {
         }
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a Boat with the specified BoatType for pre-defined values,
      * a Lane to give the boat its position and a name for easy identification.
@@ -229,6 +232,7 @@ public class Boat extends Entity {
         this(pos, vel, boat, lane, name, data, true);
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a Boat with the specified BoatType for pre-defined values,
      * a Lane to give the boat its position and a name for easy identification.
@@ -263,6 +267,7 @@ public class Boat extends Entity {
         }
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Method to generate the fonts needed for displaying the text.
      */
@@ -391,6 +396,7 @@ public class Boat extends Entity {
             this.velocity.scl(dampen);
         }
 
+        // >>>> Added in assessment 2 <<<<
         if (this.boost > 0) {
             this.boost--;
             if (this.boost == 1) {
@@ -420,12 +426,16 @@ public class Boat extends Entity {
 
         staminaFont.draw(batch, "Stamina: " + (int) this.getStamina(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 105);
 
+        // >>>> Added in assessment 2 <<<<
         layout.setText(shieldFont, "Shield: XXX");
 
         shieldFont.draw(batch, "Shield: " + (int) this.getShield(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 155);
 
+        // >>>> Added in assessment 2 <<<<
         layout.setText(boostFont, "Boost: XXX");
         boostFont.draw(batch, "Boost: " + (int) this.getBoost(), this.lane.getHitbox().getX() + 5, Gdx.graphics.getHeight() - 205);
+
+        // >>>> Added in assessment 2 <<<<
         super.render(batch);
         batch.end();	
         if (this.shield > 0) {	
@@ -440,6 +450,7 @@ public class Boat extends Entity {
         }
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Check for collisions by getting the contents of the lane and checking their positions to the boat position.
      *
@@ -478,6 +489,7 @@ public class Boat extends Entity {
         return recentCollision;
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Check for collisions by getting the contents of the lane and checking their positions to the boat position.
      *
@@ -741,6 +753,7 @@ public class Boat extends Entity {
         super.dispose();
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a JSON string needed to fully reconstruct the class.
      * 

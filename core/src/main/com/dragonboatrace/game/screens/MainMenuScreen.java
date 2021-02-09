@@ -52,9 +52,6 @@ public class MainMenuScreen implements Screen {
      */
     private final Button loadButton;
     /**
-     * Boolean used to store if there is a saved game.
-     */
-    /**
      * The button used to load from slot 1
      */
     private final Button slot1Button;
@@ -80,6 +77,7 @@ public class MainMenuScreen implements Screen {
      */
     private final Texture logo;
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Creates a new window that shows the main menu of the game.
      *
@@ -96,6 +94,7 @@ public class MainMenuScreen implements Screen {
             this.saveGame = this.saveGame || this.saveGameSlot[i];
         }
 
+        // >>>> Added in assessment 2 <<<<
         this.playButton = new Button(
                 new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, 600f / Config.SCALAR),
                 "play_button_active.png", "play_button_inactive.png");
@@ -133,6 +132,7 @@ public class MainMenuScreen implements Screen {
 
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Renders the main window.
      *
@@ -191,6 +191,7 @@ public class MainMenuScreen implements Screen {
         this.game.getBatch().end();
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Loads a saved game from a file
      */

@@ -31,6 +31,7 @@ public class Hitbox {
      */
     private float y;
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Create a new hit box at a specified position with a width and height.
      *
@@ -50,6 +51,7 @@ public class Hitbox {
         }
     }
 
+    // >>>> Modified in assessment 2 <<<<
     public Hitbox(float x, float y, int width, int height) {
         this(x, y, width, height, true);
     }

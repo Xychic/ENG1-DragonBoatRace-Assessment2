@@ -62,6 +62,7 @@ public class Race {
 
     private int round;
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Creates a new race of a specified length.
      *
@@ -73,6 +74,7 @@ public class Race {
         this(raceLength, boatChosen, round, true);
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new race of a specified length.
      *
@@ -111,10 +113,12 @@ public class Race {
         this.timer = System.nanoTime();
     }
 
+    // >>>> Added in assessment 2 <<<<
     public Race(JsonValue data) {
         this(data, true);
     }
 
+    // >>>> Added in assessment 2 <<<<
     public Race(JsonValue data, boolean loadTextures) {
         this.length = data.getInt("length");
         this.round = data.getInt("round");
@@ -208,6 +212,7 @@ public class Race {
         }
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Render the boats in the race and the player boat.
      *
@@ -338,6 +343,7 @@ public class Race {
         this.barrier.dispose();
     }
 
+    // >>>> Added in assessment 2 <<<<
     public String toJson() {
         String[] CPUBoatJson = new String[this.boats.size()];
         for (int i=0;i<this.boats.size();i++){

@@ -27,6 +27,7 @@ public class FinishLine extends Entity {
         this.widthScale = (float) width / this.texture.getWidth();
     }
 
+    // >>>> Added in assessment 2 <<<<
     public FinishLine(Vector2 pos, int width, boolean loadTextures) {
         super(new Vector2(pos.x, pos.y), new Vector2(), EntityType.FINISH, "finish.png", loadTextures);
         if (loadTextures) {

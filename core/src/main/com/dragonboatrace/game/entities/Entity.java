@@ -10,7 +10,7 @@ import main.com.dragonboatrace.game.tools.Hitbox;
 /**
  * Represents a generic Entity.
  *
- * @author Benji Garment, Joe Wrieden
+ * @author Benji Garment, Joe Wrieden, Jacob Turner
  */
 public abstract class Entity {
     /**
@@ -34,6 +34,7 @@ public abstract class Entity {
      */
     protected Hitbox hitbox;
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Creates a new Entity at a position with a starting velocity, a entity type and a texture.
      *
@@ -46,6 +47,7 @@ public abstract class Entity {
         this(position, velocity, type, texture, true);
     }
     
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new Entity at a position with a starting velocity, a entity type and a texture.
      *

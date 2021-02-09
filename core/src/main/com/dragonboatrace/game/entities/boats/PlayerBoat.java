@@ -27,6 +27,7 @@ public class PlayerBoat extends Boat {
         super(boat, lane, name);
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a player boat with values from boat, in Lane lane, and an identifying name.
      *
@@ -76,6 +77,7 @@ public class PlayerBoat extends Boat {
                 this.velocity.set(this.velocity.x, this.speed);
             }
             if (this.position.y < Gdx.graphics.getHeight() * 0.75f) {
+                // >>>> Added in assessment 2 <<<<
                 checkPowerUpCollisions();
                 if (checkObstacleCollisions()) {
                     recentCollision = true;
@@ -92,6 +94,7 @@ public class PlayerBoat extends Boat {
         super.update(deltaTime);
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Renders the players boat with the word "Player" at the top of the lane to indicate which lane is the players.
      *

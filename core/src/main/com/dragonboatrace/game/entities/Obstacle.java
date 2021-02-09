@@ -23,6 +23,7 @@ public class Obstacle extends Entity {
 
     private final ObstacleType obstacleType;
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new Obstacle of a specific type and bounds in which it can be created.
      *
@@ -46,6 +47,7 @@ public class Obstacle extends Entity {
     }
 
 
+    // >>>> Added in assessment 2 <<<<
     public Obstacle(ObstacleType type, Vector2 pos, boolean loadTextures) {
         super(pos, new Vector2(), EntityType.OBSTACLE, type.getTexture(), loadTextures);
         this.speed = type.getSpeed();
@@ -95,6 +97,7 @@ public class Obstacle extends Entity {
         return this.position;
     }
 
+    // >>>> Added in assessment 2 <<<<
     public String toJson(){
         String s = String.format("{type:%s, pos:{x:%f, y:%f}}", 
             this.obstacleType, 

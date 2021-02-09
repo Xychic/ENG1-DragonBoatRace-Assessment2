@@ -72,6 +72,7 @@ public class ComputerBoat extends Boat {
         this.waiting = false;
     }
 
+    // >>>> Added in assessment 2 <<<<
     public ComputerBoat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data, int pickSpeedValue) {
         super(pos, vel, boat, lane, name, data);
         this.speed = this.pickSpeed(pickSpeedValue);
@@ -84,6 +85,7 @@ public class ComputerBoat extends Boat {
         this.waiting = false;
     }
 
+    // >>>> Added in assessment 2 <<<<
     public ComputerBoat(BoatType boat, Lane lane, String name, int pickSpeedValue, boolean loadTextures) {
         super(boat, lane, name, loadTextures);
         this.speed = this.pickSpeed(pickSpeedValue);
@@ -98,6 +100,7 @@ public class ComputerBoat extends Boat {
         this.waiting = false;
 	}
 
+    // >>>> Added in assessment 2 <<<<
 	public ComputerBoat(Vector2 pos, Vector2 vel, BoatType boat, Lane lane, String name, JsonValue data, int pickSpeedValue, boolean loadTextures) {
         super(pos, vel, boat, lane, name, data, loadTextures);
         this.speed = this.pickSpeed(pickSpeedValue);
@@ -112,6 +115,7 @@ public class ComputerBoat extends Boat {
         this.waiting = false;
 	}
 
+    // >>>> Modified in assessment 2 <<<<
 	/**
      * Update the position of the boat in respect to the time passed since the last frame.
      *
@@ -126,6 +130,7 @@ public class ComputerBoat extends Boat {
             if (closestObstacle != null) {
                 this.velocity.set(this.speed * moveFromObject(closestObstacle), this.speed);
                 this.stamina = (this.stamina < this.maxStamina) ? this.regenerateStamina() + this.stamina : this.maxStamina;
+            // >>>> Added in assessment 2 <<<<
             } else if (closestPowerUp != null) {
                 this.velocity.set(this.speed * moveToPowerUp(closestPowerUp), this.speed);
                 this.stamina = (this.stamina < this.maxStamina) ? this.regenerateStamina() + this.stamina : this.maxStamina;
@@ -268,6 +273,7 @@ public class ComputerBoat extends Boat {
         }
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Check for powerups in the area, specified by moveArea, to move away from.
      *
@@ -287,6 +293,7 @@ public class ComputerBoat extends Boat {
         return closest;
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Move in the direction towards a power up.
      *

@@ -16,6 +16,7 @@ import main.com.dragonboatrace.game.entities.EntityType;
 import main.com.dragonboatrace.game.entities.boats.BoatType;
 import main.com.dragonboatrace.game.tools.Config;
 
+// >>>> Added in assessment 2 <<<<
 /**
  * Displays the screen that allows the player to choose a difficulty
  *

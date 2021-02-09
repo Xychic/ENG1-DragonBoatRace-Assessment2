@@ -103,6 +103,7 @@ public class MainGameScreen implements Screen {
      */
     private String countDownString = "";
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Creates a new game screen with a game instance.
      *
@@ -118,10 +119,12 @@ public class MainGameScreen implements Screen {
         this.background = new ScrollingBackground();
         this.background.resize(Gdx.graphics.getWidth());
 
+        // >>>> Added in assessment 2 <<<<
         this.saveButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.5f), "save_button_active.png", "save_button_inactive.png");
         this.mainMenuButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "main_menu_button_active.png", "main_menu_button_inactive.png");
         this.exitButton = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "exit_button_active.png", "exit_button_inactive.png");
 
+        // >>>> Added in assessment 2 <<<<
         this.slot1Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.5f), "slot1_button_active.png", "slot1_button_inactive.png");
         this.slot2Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.4f), "slot2_button_active.png", "slot2_button_inactive.png");
         this.slot3Button = new Button(new Vector2((Gdx.graphics.getWidth() - EntityType.BUTTON.getWidth()) / 2.0f, Gdx.graphics.getHeight() * 0.3f), "slot3_button_active.png", "slot3_button_inactive.png");
@@ -164,6 +167,7 @@ public class MainGameScreen implements Screen {
         timer.stop();
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Creates a new game screen with a game instance.
      *
@@ -232,6 +236,7 @@ public class MainGameScreen implements Screen {
         timer.start();
     }
 
+    // >>>> Modified in assessment 2 <<<<
     /**
      * Render the main game window. Includes rendering the background and the {@link Race}.
      *
@@ -274,6 +279,7 @@ public class MainGameScreen implements Screen {
         this.game.getBatch().end();
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Render the pause screen over the game
      */
@@ -357,6 +363,8 @@ public class MainGameScreen implements Screen {
         this.game.getBatch().dispose();
     }
 
+    
+    // >>>> Added in assessment 2 <<<<
     public String toJson() {
         return String.format("{difficulty: %d, race:%s}",
             Config.GAME_DIFFICULTY,

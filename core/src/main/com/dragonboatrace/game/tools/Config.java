@@ -50,11 +50,13 @@ public class Config {
     */
     public static int GAME_DIFFICULTY = 1;
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * The location of the save files
      */
     public static String SAVE_FILE_LOCATION = getSaveLocation();
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * 
      * @return A string to the save file location.
@@ -124,6 +126,7 @@ public class Config {
         OBSTACLE_COLLISION_TIME = obstacleCollisionTime;
     }
 
+    // >>>> Added in assessment 2 <<<<
     /**
      * Update the game difficulty.
      * 

@@ -1,5 +1,6 @@
 package main.com.dragonboatrace.game.tools;
 
+// >>>> Added in assessment 2 <<<<
 /**
  * A simple helper class for storing two different object.
  * 

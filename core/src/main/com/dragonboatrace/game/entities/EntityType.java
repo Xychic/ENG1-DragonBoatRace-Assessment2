@@ -11,6 +11,7 @@ public enum EntityType {
 
     BOAT(50, 80),
     OBSTACLE(40, 40),
+    // >>>> Added in assessment 2 <<<<
     POWERUP(50,50),
     FINISH(960, 241),
     BUTTON(400, 140);
