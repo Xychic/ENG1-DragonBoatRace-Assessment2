@@ -62,6 +62,10 @@ public class Lane {
         this.obstacles = new ArrayList<Obstacle>();
         this.powerUps = new ArrayList<PowerUp>();
         this.randomWaitTimes = new ArrayList<Float>();
+
+        if (showRenderer) {
+            populateList(round);
+        }
     }
 
     /**
@@ -72,7 +76,6 @@ public class Lane {
      */
     public Lane(Vector2 pos, int width, int round) {
         this(pos, width, Gdx.graphics.getHeight() + 200, round, true);
-        populateList(round);
     }
 
     /**
@@ -136,7 +139,6 @@ public class Lane {
      * @param velY      The y-velocity of the boat in the lane.
      */
     public void update(float deltaTime, float velY) {
-
         /* Check for obstacle collisions */
         ListIterator<Obstacle> iter1 = obstacles.listIterator();
         while (iter1.hasNext()) {
@@ -173,7 +175,6 @@ public class Lane {
                 else{
                     powerUps.add(randomPowerUp());
                 }
-                
                 times.remove();
             }
         }
