@@ -6,7 +6,7 @@ package main.com.dragonboatrace.game.entities.boats;
  * @author Benji Garment, Joe Wrieden
  */
 public enum BoatType {
-    /* ENUM(health, stamina, agility, speed, maxSpeed, image) */
+    /* ENUM(health, stamina, agility, speed, image) */
 
     FAST(50, 120, 85, 275, "fast.png"),
     AGILE(50, 120, 95, 245, "agile.png"),

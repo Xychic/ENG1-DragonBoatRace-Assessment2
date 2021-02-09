@@ -279,7 +279,9 @@ public class Boat extends Entity {
 
         /*Font for displaying the name */
         parameter.size = 50;
-        parameter.color = Color.BLACK;
+        parameter.color = Color.WHITE;
+        parameter.borderColor = Color.BLACK;
+        parameter.borderWidth = 3;
         this.nameFont = generator.generateFont(parameter);
 
         layout.setText(nameFont, this.name);
