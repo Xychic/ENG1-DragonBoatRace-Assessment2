@@ -1,5 +1,6 @@
-com.dragonboatrace
-com.dragonboatrace.entities
-com.dragonboatrace.entities.boats
-com.dragonboatrace.screens
-com.dragonboatrace.tools
+main.com.dragonboatrace.game
+main.com.dragonboatrace.game.entities
+main.com.dragonboatrace.game.entities.boats
+main.com.dragonboatrace.game.screens
+main.com.dragonboatrace.game.tools
+test.com.dragonboatrace.game

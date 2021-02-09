@@ -1,0 +1,1 @@
+javadoc $((ls -Path $pwd\core\src\ -Filter *.java -Recurse).FullName) -d .\docs\
